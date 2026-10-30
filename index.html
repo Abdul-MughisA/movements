@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Pixel-level image editing studio with interactive stackable effect sliders."
+      content="Pixel-level image studio with Material 3 rotary knobs and stackable vertical sliders."
     />
     <title>Movements — Pixel Studio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,24 +19,34 @@
         color-scheme: light;
         font-family: "Roboto", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         color: #1d1b20;
-        background: #ffffff;
+        background: #fef7ff;
         font-synthesis: none;
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
 
-        /* Material 3 Colors */
+        /* Material 3 Baseline Color Tokens */
         --md-sys-color-primary: #6750a4;
         --md-sys-color-on-primary: #ffffff;
         --md-sys-color-primary-container: #eaddff;
         --md-sys-color-on-primary-container: #21005d;
         --md-sys-color-secondary-container: #e8def8;
-        --md-sys-color-surface: #ffffff;
+        --md-sys-color-on-secondary-container: #1d192b;
+        --md-sys-color-surface: #fef7ff;
         --md-sys-color-on-surface: #1d1b20;
         --md-sys-color-surface-variant: #e7e0ec;
         --md-sys-color-on-surface-variant: #49454f;
+        --md-sys-color-outline: #79747e;
+        --md-sys-color-outline-variant: #cac4d0;
+
+        /* Material 3 Elevations */
+        --md-elevation-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+        --md-elevation-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+        --md-elevation-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
 
         /* Motion Tokens */
         --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+        --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+        --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
         --md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
         --md-sys-motion-spring-fast-spatial: linear(
           0, 0.15199 10%, 0.41201 20%, 0.6383 30%, 0.79724 40%,
@@ -56,12 +66,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #ffffff;
-        padding: 16px;
+        background: #fef7ff;
+        padding: 20px;
         overflow-x: hidden;
       }
 
-      /* Main Studio Frame */
+      /* Main Frame Container */
       .studio-frame {
         display: flex;
         gap: 36px;
@@ -82,77 +92,138 @@
         flex-direction: column;
         align-items: center;
         justify-content: space-between;
-        padding: 36px 0;
+        padding: 34px 0;
         flex-shrink: 0;
+        box-shadow: var(--md-elevation-1);
       }
 
-      /* Circular Left Buttons */
-      .circle-button {
+      /* Material 3 Rotary Knob Component */
+      .knob-control {
+        width: 128px;
+        height: 128px;
+        border-radius: 50%;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        touch-action: none;
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* Knob Dial Body */
+      .knob-dial {
         width: 128px;
         height: 128px;
         border-radius: 50%;
         background: var(--md-sys-color-primary);
         color: var(--md-sys-color-on-primary);
-        border: none;
-        outline: none;
-        cursor: pointer;
-        position: relative;
-        isolation: isolate;
-        overflow: hidden;
+        position: absolute;
+        inset: 0;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-start;
-        padding-top: 32px;
-        text-align: center;
-        font-family: inherit;
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.9px;
-        text-transform: uppercase;
-        -webkit-tap-highlight-color: transparent;
+        justify-content: center;
+        box-shadow: var(--md-elevation-1);
+        overflow: hidden;
         transition:
-          transform 180ms var(--md-sys-motion-spring-fast-spatial),
-          background-color 150ms var(--md-sys-motion-easing-standard);
+          box-shadow 150ms var(--md-sys-motion-easing-standard),
+          transform 150ms var(--md-sys-motion-spring-fast-spatial);
       }
 
-      .circle-button::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background-color: currentColor;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 120ms linear;
+      .knob-control:hover .knob-dial {
+        box-shadow: var(--md-elevation-2);
       }
 
-      .circle-button:hover::before {
-        opacity: 0.08;
+      .knob-control.is-dragging .knob-dial {
+        box-shadow: var(--md-elevation-3);
       }
 
-      .circle-button:focus-visible::before {
-        opacity: 0.12;
-      }
-
-      .circle-button:focus-visible {
+      .knob-control:focus-visible .knob-dial {
         outline: 3px solid var(--md-sys-color-on-primary-container);
         outline-offset: 3px;
       }
 
-      .circle-button:active {
-        transform: scale(0.95);
+      /* Hover/Pressed State Layer */
+      .knob-dial::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: #ffffff;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 120ms linear;
+        z-index: 3;
       }
 
-      .circle-button:active::before {
-        opacity: 0.16;
+      .knob-control:hover .knob-dial::before {
+        opacity: 0.08;
       }
 
-      .intensity-sub {
-        font-size: 13px;
-        font-weight: 600;
-        margin-top: 18px;
-        opacity: 0.85;
+      .knob-control:active .knob-dial::before {
+        opacity: 0.14;
+      }
+
+      /* Rotating Indicator Ring */
+      .knob-indicator-ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        pointer-events: none;
+        will-change: transform;
+        z-index: 1;
+        transition: transform 60ms ease-out;
+      }
+
+      /* Indicator Pip / Notch */
+      .knob-indicator {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 6px;
+        height: 14px;
+        border-radius: 3px;
+        background: #ffffff;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+      }
+
+      /* Knob Upright Center Face */
+      .knob-center-face {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        text-align: center;
+      }
+
+      .knob-title {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.9px;
+        text-transform: uppercase;
+        color: var(--md-sys-color-on-primary);
+      }
+
+      .knob-value {
+        font-size: 14px;
+        font-weight: 700;
+        margin-top: 4px;
+        color: var(--md-sys-color-on-primary);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .knob-icon {
+        width: 18px;
+        height: 18px;
+        margin-top: 4px;
+        color: var(--md-sys-color-on-primary);
+        opacity: 0.9;
       }
 
       .file-input {
@@ -172,9 +243,10 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 53px 60px 40px;
+        padding: 50px 60px 38px;
         position: relative;
         flex-shrink: 0;
+        box-shadow: var(--md-elevation-1);
       }
 
       /* White Image Screen Box */
@@ -189,7 +261,8 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: outline 180ms ease, background-color 180ms ease;
+        box-shadow: 0 2px 10px rgba(103, 80, 164, 0.08);
+        transition: outline 150ms ease, background-color 150ms ease;
       }
 
       .screen-box.drag-over {
@@ -198,19 +271,53 @@
         outline-offset: -8px;
       }
 
+      /* Canvas filling 100% of the white box with crisp high-DPI rendering */
       .pixel-canvas {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
+        width: 100%;
+        height: 100%;
         display: block;
-        border-radius: 20px;
+        object-fit: cover;
+        border-radius: 32px;
+        image-rendering: auto;
       }
 
-      /* Interactive Sliders Row Below White Box */
+      /* Save Badge Overlay on Hover */
+      .screen-save-badge {
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        background: rgba(33, 0, 93, 0.85);
+        color: #ffffff;
+        padding: 6px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        opacity: 0;
+        transform: translateY(4px);
+        pointer-events: none;
+        transition:
+          opacity 160ms var(--md-sys-motion-easing-standard),
+          transform 160ms var(--md-sys-motion-easing-standard);
+      }
+
+      .screen-save-badge svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      .screen-box:hover .screen-save-badge {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Sliders Row Below White Box */
       .sliders-row {
         width: 580px;
-        height: 94px;
-        margin-top: 11px;
+        height: 96px;
+        margin-top: 14px;
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
@@ -219,8 +326,8 @@
 
       /* Individual Vertical Slider Column */
       .v-slider-col {
-        width: 44px;
-        height: 94px;
+        width: 48px;
+        height: 96px;
         position: relative;
         display: flex;
         flex-direction: column;
@@ -228,16 +335,17 @@
         justify-content: flex-end;
         touch-action: none;
         cursor: ns-resize;
+        outline: none;
       }
 
       /* Vertical Track Slot */
       .v-slider-track {
         position: absolute;
-        bottom: 20px;
-        width: 6px;
-        height: 54px;
-        border-radius: 3px;
-        background: transparent;
+        bottom: 22px;
+        width: 8px;
+        height: 58px;
+        border-radius: 4px;
+        background: rgba(103, 80, 164, 0.14);
         pointer-events: none;
         transition: background-color 150ms ease;
       }
@@ -245,7 +353,7 @@
       .v-slider-col:hover .v-slider-track,
       .v-slider-col.is-active .v-slider-track,
       .v-slider-col.has-value .v-slider-track {
-        background: rgba(103, 80, 164, 0.2);
+        background: rgba(103, 80, 164, 0.28);
       }
 
       .v-slider-fill {
@@ -254,7 +362,7 @@
         left: 0;
         width: 100%;
         height: 0%;
-        border-radius: 3px;
+        border-radius: 4px;
         background: var(--md-sys-color-primary);
         pointer-events: none;
       }
@@ -274,34 +382,61 @@
         align-items: center;
         justify-content: center;
         cursor: grab;
+        box-shadow: var(--md-elevation-1);
         transition:
           transform 100ms var(--md-sys-motion-easing-standard),
-          width 120ms ease, height 120ms ease;
+          box-shadow 150ms var(--md-sys-motion-easing-standard);
         z-index: 2;
         -webkit-tap-highlight-color: transparent;
       }
 
-      .v-slider-col.is-active .slider-dot {
-        cursor: grabbing;
-        transform: translateX(-50%) scale(1.08);
+      .v-slider-col:hover .slider-dot {
+        box-shadow: var(--md-elevation-2);
       }
 
-      /* Floating Value / Effect Tooltip */
+      .v-slider-col.is-active .slider-dot {
+        cursor: grabbing;
+        transform: translateX(-50%) scale(1.1);
+        box-shadow: var(--md-elevation-3);
+      }
+
+      .v-slider-col:focus-visible .slider-dot {
+        outline: 3px solid var(--md-sys-color-on-primary-container);
+        outline-offset: 2px;
+      }
+
+      /* Dot State Layer */
+      .slider-dot::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: #ffffff;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 120ms linear;
+      }
+
+      .v-slider-col:hover .slider-dot::before {
+        opacity: 0.1;
+      }
+
+      /* Floating Value Tooltip */
       .slider-tooltip {
         position: absolute;
-        bottom: calc(100% + 8px);
+        bottom: calc(100% + 10px);
         left: 50%;
         transform: translateX(-50%) translateY(4px);
         background: var(--md-sys-color-on-primary-container);
         color: var(--md-sys-color-on-primary);
         font-size: 11px;
         font-weight: 500;
-        padding: 4px 8px;
+        padding: 5px 9px;
         border-radius: 8px;
         white-space: nowrap;
         pointer-events: none;
         opacity: 0;
-        box-shadow: 0 4px 10px rgba(33, 0, 93, 0.25);
+        box-shadow: 0 4px 12px rgba(33, 0, 93, 0.28);
         transition:
           opacity 140ms var(--md-sys-motion-easing-standard),
           transform 140ms var(--md-sys-motion-easing-standard);
@@ -314,7 +449,29 @@
         transform: translateX(-50%) translateY(0);
       }
 
-      /* Ink Ripple Animation */
+      /* Bottom Indicator Label */
+      .slider-col-label {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: var(--md-sys-color-primary);
+        opacity: 0.75;
+        white-space: nowrap;
+        pointer-events: none;
+        transition: opacity 140ms ease;
+      }
+
+      .v-slider-col:hover .slider-col-label,
+      .v-slider-col.is-active .slider-col-label {
+        opacity: 1;
+      }
+
+      /* Ripple Ink Effect */
       .ripple-ink {
         position: absolute;
         border-radius: 50%;
@@ -373,46 +530,116 @@
           gap: 12px;
         }
 
-        .circle-button {
+        .knob-control,
+        .knob-dial {
           width: 88px;
           height: 88px;
+        }
+
+        .knob-title {
           font-size: 9px;
-          padding-top: 22px;
         }
 
         .screen-box {
           height: 280px;
         }
       }
+
+      /* Accessibility Reduced Motion */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
     </style>
   </head>
   <body>
     <main class="studio-frame">
-      <!-- Left Pill Container -->
-      <aside class="left-pill" aria-label="Controls">
-        <!-- Button 1: UPLOAD -->
-        <button class="circle-button" id="upload-button" type="button" aria-label="Upload an image">
-          <span>UPLOAD</span>
-        </button>
+      <!-- Left Pill Container with Rotary Knobs -->
+      <aside class="left-pill" aria-label="Rotary Controls">
+        <!-- Knob 1: UPLOAD -->
+        <div
+          class="knob-control"
+          id="upload-knob"
+          role="button"
+          tabindex="0"
+          aria-label="Upload an image. Drag vertically or scroll to cycle sample presets."
+          title="Click to upload an image. Drag vertically to cycle presets."
+        >
+          <div class="knob-dial" id="upload-dial">
+            <div class="knob-indicator-ring" id="upload-ring">
+              <div class="knob-indicator"></div>
+            </div>
+            <div class="knob-center-face">
+              <span class="knob-title">UPLOAD</span>
+              <svg class="knob-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M11 16V7.85l-2.6 2.6L7 9l5-5 5 5-1.4 1.45-2.6-2.6V16h2ZM5 20q-.825 0-1.412-.587T3 18v-3h2v3h14v-3h2v3q0 .825-.587 1.413T19 20H5Z" />
+              </svg>
+            </div>
+          </div>
+        </div>
         <input class="file-input" id="image-input" type="file" accept="image/*" aria-label="Choose image file" />
 
-        <!-- Button 2: INTENSITY -->
-        <button class="circle-button" id="intensity-button" type="button" aria-label="Master Intensity">
-          <span>INTENSITY</span>
-          <span class="intensity-sub" id="intensity-sub">100%</span>
-        </button>
+        <!-- Knob 2: INTENSITY -->
+        <div
+          class="knob-control"
+          id="intensity-knob"
+          role="slider"
+          tabindex="0"
+          aria-label="Master Intensity"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="100"
+          title="Drag vertically or scroll to adjust master intensity"
+        >
+          <div class="knob-dial" id="intensity-dial">
+            <div class="knob-indicator-ring" id="intensity-ring">
+              <div class="knob-indicator"></div>
+            </div>
+            <div class="knob-center-face">
+              <span class="knob-title">INTENSITY</span>
+              <span class="knob-value" id="intensity-value">100%</span>
+            </div>
+          </div>
+        </div>
 
-        <!-- Button 3: RESET -->
-        <button class="circle-button" id="reset-button" type="button" aria-label="Reset all effects">
-          <span>RESET</span>
-        </button>
+        <!-- Knob 3: RESET -->
+        <div
+          class="knob-control"
+          id="reset-knob"
+          role="button"
+          tabindex="0"
+          aria-label="Reset all effect sliders"
+          title="Click or turn to reset all effect sliders to zero"
+        >
+          <div class="knob-dial" id="reset-dial">
+            <div class="knob-indicator-ring" id="reset-ring">
+              <div class="knob-indicator"></div>
+            </div>
+            <div class="knob-center-face">
+              <span class="knob-title">RESET</span>
+              <svg class="knob-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 13c0-4.42-3.58-8-8-8zm-6 8c0-1.01.25-1.97.7-2.8L5.24 8.74A7.93 7.93 0 0 0 4 13c0 4.42 3.58 8 8 8v4l5-5-5-5v4c-3.31 0-6-2.69-6-6z" />
+              </svg>
+            </div>
+          </div>
+        </div>
       </aside>
 
       <!-- Right Main Container -->
       <section class="right-container" aria-label="Image screen and effect sliders">
-        <!-- White Display Box -->
-        <div class="screen-box" id="screen-box" title="Click to upload or download processed image, or drop an image file here">
-          <canvas class="pixel-canvas" id="pixel-canvas" role="img" aria-label="Pixel manipulated image" hidden></canvas>
+        <!-- White Display Box (fills 100% with high-DPI image) -->
+        <div class="screen-box" id="screen-box" title="Click to download processed image, or drop an image file here">
+          <canvas class="pixel-canvas" id="pixel-canvas" role="img" aria-label="Pixel manipulated image"></canvas>
+          <div class="screen-save-badge">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M5 20h14v-2H5v2zm7-18L5.33 8.67l1.42 1.41L11 5.83V16h2V5.83l4.24 4.25 1.42-1.41L12 2z" transform="rotate(180 12 12)" />
+            </svg>
+            <span>Click to save PNG</span>
+          </div>
         </div>
 
         <!-- 8 Interactive Vertical Sliders (The dots below the white box) -->
@@ -425,6 +652,7 @@
             <div class="slider-dot">
               <div class="slider-tooltip">Pixelate: 0%</div>
             </div>
+            <span class="slider-col-label">Pixel</span>
           </div>
 
           <!-- Slider 2: Film Grain -->
@@ -435,6 +663,7 @@
             <div class="slider-dot">
               <div class="slider-tooltip">Grain: 0%</div>
             </div>
+            <span class="slider-col-label">Grain</span>
           </div>
 
           <!-- Slider 3: Sharpen -->
@@ -445,6 +674,7 @@
             <div class="slider-dot">
               <div class="slider-tooltip">Sharpen: 0%</div>
             </div>
+            <span class="slider-col-label">Sharp</span>
           </div>
 
           <!-- Slider 4: Posterize -->
@@ -455,6 +685,7 @@
             <div class="slider-dot">
               <div class="slider-tooltip">Posterize: 0%</div>
             </div>
+            <span class="slider-col-label">Poster</span>
           </div>
 
           <!-- Slider 5: Sepia Warmth -->
@@ -465,6 +696,7 @@
             <div class="slider-dot">
               <div class="slider-tooltip">Sepia: 0%</div>
             </div>
+            <span class="slider-col-label">Sepia</span>
           </div>
 
           <!-- Slider 6: Contrast / Threshold -->
@@ -475,6 +707,7 @@
             <div class="slider-dot">
               <div class="slider-tooltip">Contrast: 0%</div>
             </div>
+            <span class="slider-col-label">Contrast</span>
           </div>
 
           <!-- Slider 7: Vignette -->
@@ -485,6 +718,7 @@
             <div class="slider-dot">
               <div class="slider-tooltip">Vignette: 0%</div>
             </div>
+            <span class="slider-col-label">Vignette</span>
           </div>
 
           <!-- Slider 8: Invert -->
@@ -495,31 +729,46 @@
             <div class="slider-dot">
               <div class="slider-tooltip">Invert: 0%</div>
             </div>
+            <span class="slider-col-label">Invert</span>
           </div>
         </div>
       </section>
     </main>
 
     <script>
-      // Elements
-      const uploadButton = document.querySelector("#upload-button");
+      // DOM Elements
+      const uploadKnob = document.querySelector("#upload-knob");
+      const uploadRing = document.querySelector("#upload-ring");
       const imageInput = document.querySelector("#image-input");
-      const intensityButton = document.querySelector("#intensity-button");
-      const intensitySub = document.querySelector("#intensity-sub");
-      const resetButton = document.querySelector("#reset-button");
+      const intensityKnob = document.querySelector("#intensity-knob");
+      const intensityRing = document.querySelector("#intensity-ring");
+      const intensityValue = document.querySelector("#intensity-value");
+      const resetKnob = document.querySelector("#reset-knob");
+      const resetRing = document.querySelector("#reset-ring");
       const screenBox = document.querySelector("#screen-box");
       const pixelCanvas = document.querySelector("#pixel-canvas");
       const sliderCols = document.querySelectorAll(".v-slider-col");
 
       const canvasCtx = pixelCanvas.getContext("2d", { willReadFrequently: true });
-      const sampleImagePath = "Assets/Movements%20Fri%2023%20Oct.png";
+      const sampleImagePath = "Assets/sample_landscape.png";
+
+      // Fixed Display Dimensions & High DPI
+      const displayW = 580;
+      const displayH = 408;
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const canvasW = Math.round(displayW * dpr);
+      const canvasH = Math.round(displayH * dpr);
+
+      pixelCanvas.width = canvasW;
+      pixelCanvas.height = canvasH;
 
       // State
       let sourceImage = null;
-      let originalImageData = null;
+      let rawImageData = null;
       let masterIntensity = 1.0;
       let loadedUrl = null;
-      const maxTravel = 52; // Max upward travel in px
+      const maxTravel = 56; // Max upward slider travel in px
+      let isRendering = false;
 
       const effectValues = {
         pixelate: 0,
@@ -532,7 +781,14 @@
         invert: 0,
       };
 
-      // Material Ripple
+      // Built-in presets for Upload Knob rotation
+      const presetList = [
+        "Assets/sample_landscape.png",
+        "Assets/Movements%20Fri%2023%20Oct.png"
+      ];
+      let presetIndex = 0;
+
+      // Material Ink Ripple
       function attachRipple(el) {
         el.addEventListener("pointerdown", (event) => {
           const rect = el.getBoundingClientRect();
@@ -555,202 +811,402 @@
         });
       }
 
-      document.querySelectorAll(".circle-button").forEach(attachRipple);
+      document.querySelectorAll(".knob-control, .slider-dot").forEach(attachRipple);
 
-      // Pixel-level manipulations
+      // Fast math clamps
       function clamp(val) {
         return val < 0 ? 0 : val > 255 ? 255 : val;
       }
 
+      // Real-time High Performance Pixel Stack Processing
       function applyPixelStack() {
-        if (!sourceImage || !originalImageData) return;
+        if (!sourceImage || !rawImageData || isRendering) return;
 
-        const w = originalImageData.width;
-        const h = originalImageData.height;
-        const srcData = originalImageData.data;
-        const outputImage = canvasCtx.createImageData(w, h);
-        const out = outputImage.data;
-        out.set(srcData);
+        isRendering = true;
+        requestAnimationFrame(() => {
+          const w = canvasW;
+          const h = canvasH;
+          const src = rawImageData.data;
+          const outputImg = canvasCtx.createImageData(w, h);
+          const out = outputImg.data;
+          out.set(src);
 
-        const eff = effectValues;
-        const master = masterIntensity;
+          const eff = effectValues;
+          const master = masterIntensity;
 
-        // 1. Pixelate
-        if (eff.pixelate > 0.01) {
-          const blockSize = Math.max(2, Math.round(1 + eff.pixelate * 22));
-          for (let y = 0; y < h; y += blockSize) {
-            for (let x = 0; x < w; x += blockSize) {
-              const blockW = Math.min(blockSize, w - x);
-              const blockH = Math.min(blockSize, h - y);
-              let rSum = 0, gSum = 0, bSum = 0, aSum = 0;
-              const count = blockW * blockH;
+          // 1. Pixelate (Block Aggregation)
+          if (eff.pixelate > 0.01) {
+            const blockSize = Math.max(2, Math.round(1 + eff.pixelate * 28 * dpr));
+            for (let y = 0; y < h; y += blockSize) {
+              for (let x = 0; x < w; x += blockSize) {
+                const bw = Math.min(blockSize, w - x);
+                const bh = Math.min(blockSize, h - y);
+                let rSum = 0, gSum = 0, bSum = 0, aSum = 0;
+                const count = bw * bh;
 
-              for (let by = 0; by < blockH; by++) {
-                for (let bx = 0; bx < blockW; bx++) {
-                  const idx = ((y + by) * w + (x + bx)) * 4;
-                  rSum += out[idx];
-                  gSum += out[idx + 1];
-                  bSum += out[idx + 2];
-                  aSum += out[idx + 3];
+                for (let by = 0; by < bh; by++) {
+                  for (let bx = 0; bx < bw; bx++) {
+                    const idx = ((y + by) * w + (x + bx)) * 4;
+                    rSum += out[idx];
+                    gSum += out[idx + 1];
+                    bSum += out[idx + 2];
+                    aSum += out[idx + 3];
+                  }
+                }
+
+                const rA = rSum / count;
+                const gA = gSum / count;
+                const bA = bSum / count;
+                const aA = aSum / count;
+
+                for (let by = 0; by < bh; by++) {
+                  for (let bx = 0; bx < bw; bx++) {
+                    const idx = ((y + by) * w + (x + bx)) * 4;
+                    out[idx] = rA;
+                    out[idx + 1] = gA;
+                    out[idx + 2] = bA;
+                    out[idx + 3] = aA;
+                  }
                 }
               }
+            }
+          }
 
-              const rAvg = rSum / count;
-              const gAvg = gSum / count;
-              const bAvg = bSum / count;
-              const aAvg = aSum / count;
+          // 2. Sharpen (Convolution Kernel)
+          if (eff.sharpen > 0.01) {
+            const copy = new Uint8ClampedArray(out);
+            const k = eff.sharpen * 1.6;
+            const centerW = 1 + 4 * k;
+            for (let y = 1; y < h - 1; y++) {
+              const rowIdx = y * w;
+              const topIdx = (y - 1) * w;
+              const botIdx = (y + 1) * w;
+              for (let x = 1; x < w - 1; x++) {
+                const idx = (rowIdx + x) * 4;
+                const top = (topIdx + x) * 4;
+                const bot = (botIdx + x) * 4;
+                const left = (rowIdx + (x - 1)) * 4;
+                const right = (rowIdx + (x + 1)) * 4;
 
-              for (let by = 0; by < blockH; by++) {
-                for (let bx = 0; bx < blockW; bx++) {
-                  const idx = ((y + by) * w + (x + bx)) * 4;
-                  out[idx] = rAvg;
-                  out[idx + 1] = gAvg;
-                  out[idx + 2] = bAvg;
-                  out[idx + 3] = aAvg;
+                for (let c = 0; c < 3; c++) {
+                  const val = centerW * copy[idx + c] - k * (copy[top + c] + copy[bot + c] + copy[left + c] + copy[right + c]);
+                  out[idx + c] = clamp(val);
                 }
               }
             }
           }
-        }
 
-        // 2. Sharpen (Convolution)
-        if (eff.sharpen > 0.01) {
-          const copy = new Uint8ClampedArray(out);
-          const k = eff.sharpen * 1.5;
-          const centerWeight = 1 + 4 * k;
-          for (let y = 1; y < h - 1; y++) {
-            for (let x = 1; x < w - 1; x++) {
-              const idx = (y * w + x) * 4;
-              const top = ((y - 1) * w + x) * 4;
-              const bottom = ((y + 1) * w + x) * 4;
-              const left = (y * w + (x - 1)) * 4;
-              const right = (y * w + (x + 1)) * 4;
+          // 3. Film Grain
+          if (eff.grain > 0.01) {
+            const amount = eff.grain * 60;
+            let seed = 12345;
+            for (let i = 0; i < out.length; i += 4) {
+              seed = (seed * 1664525 + 1013904223) | 0;
+              const noise = ((seed & 0xff) / 127.5 - 1.0) * amount;
+              out[i] = clamp(out[i] + noise);
+              out[i + 1] = clamp(out[i + 1] + noise);
+              out[i + 2] = clamp(out[i + 2] + noise);
+            }
+          }
 
-              for (let c = 0; c < 3; c++) {
-                const val = centerWeight * copy[idx + c] - k * (copy[top + c] + copy[bottom + c] + copy[left + c] + copy[right + c]);
-                out[idx + c] = clamp(val);
+          // 4. Posterize
+          if (eff.posterize > 0.01) {
+            const levels = Math.max(2, Math.round(16 - eff.posterize * 13));
+            const step = 255 / (levels - 1);
+            for (let i = 0; i < out.length; i += 4) {
+              out[i] = Math.round(out[i] / step) * step;
+              out[i + 1] = Math.round(out[i + 1] / step) * step;
+              out[i + 2] = Math.round(out[i + 2] / step) * step;
+            }
+          }
+
+          // 5. Sepia Warmth
+          if (eff.sepia > 0.01) {
+            const s = eff.sepia;
+            const inv = 1 - s;
+            for (let i = 0; i < out.length; i += 4) {
+              const r = out[i], g = out[i + 1], b = out[i + 2];
+              const sr = clamp(0.393 * r + 0.769 * g + 0.189 * b);
+              const sg = clamp(0.349 * r + 0.686 * g + 0.168 * b);
+              const sb = clamp(0.272 * r + 0.534 * g + 0.131 * b);
+              out[i] = r * inv + sr * s;
+              out[i + 1] = g * inv + sg * s;
+              out[i + 2] = b * inv + sb * s;
+            }
+          }
+
+          // 6. Contrast
+          if (eff.contrast > 0.01) {
+            const factor = (259 * (eff.contrast * 180 + 255)) / (255 * (259 - eff.contrast * 180));
+            for (let i = 0; i < out.length; i += 4) {
+              out[i] = clamp(factor * (out[i] - 128) + 128);
+              out[i + 1] = clamp(factor * (out[i + 1] - 128) + 128);
+              out[i + 2] = clamp(factor * (out[i + 2] - 128) + 128);
+            }
+          }
+
+          // 7. Vignette
+          if (eff.vignette > 0.01) {
+            const v = eff.vignette;
+            const cx = w / 2;
+            const cy = h / 2;
+            const maxDist = Math.hypot(cx, cy);
+            for (let y = 0; y < h; y++) {
+              const dy = y - cy;
+              for (let x = 0; x < w; x++) {
+                const dx = x - cx;
+                const dist = Math.hypot(dx, dy) / maxDist;
+                const vignetteFactor = 1 - Math.pow(dist, 1.8) * v * 0.85;
+                const idx = (y * w + x) * 4;
+                out[idx] = clamp(out[idx] * vignetteFactor);
+                out[idx + 1] = clamp(out[idx + 1] * vignetteFactor);
+                out[idx + 2] = clamp(out[idx + 2] * vignetteFactor);
               }
             }
           }
-        }
 
-        // 3. Film Grain
-        if (eff.grain > 0.01) {
-          const amount = eff.grain * 65;
-          let seed = 42;
-          for (let i = 0; i < out.length; i += 4) {
-            seed = (seed * 1664525 + 1013904223) | 0;
-            const noise = ((seed & 0xff) / 127.5 - 1.0) * amount;
-            out[i] = clamp(out[i] + noise);
-            out[i + 1] = clamp(out[i + 1] + noise);
-            out[i + 2] = clamp(out[i + 2] + noise);
-          }
-        }
-
-        // 4. Posterize
-        if (eff.posterize > 0.01) {
-          const levels = Math.max(2, Math.round(16 - eff.posterize * 13));
-          const step = 255 / (levels - 1);
-          for (let i = 0; i < out.length; i += 4) {
-            out[i] = Math.round(out[i] / step) * step;
-            out[i + 1] = Math.round(out[i + 1] / step) * step;
-            out[i + 2] = Math.round(out[i + 2] / step) * step;
-          }
-        }
-
-        // 5. Sepia
-        if (eff.sepia > 0.01) {
-          const s = eff.sepia;
-          const inv = 1 - s;
-          for (let i = 0; i < out.length; i += 4) {
-            const r = out[i], g = out[i + 1], b = out[i + 2];
-            const sr = clamp(0.393 * r + 0.769 * g + 0.189 * b);
-            const sg = clamp(0.349 * r + 0.686 * g + 0.168 * b);
-            const sb = clamp(0.272 * r + 0.534 * g + 0.131 * b);
-            out[i] = r * inv + sr * s;
-            out[i + 1] = g * inv + sg * s;
-            out[i + 2] = b * inv + sb * s;
-          }
-        }
-
-        // 6. Contrast
-        if (eff.contrast > 0.01) {
-          const factor = (259 * (eff.contrast * 180 + 255)) / (255 * (259 - eff.contrast * 180));
-          for (let i = 0; i < out.length; i += 4) {
-            out[i] = clamp(factor * (out[i] - 128) + 128);
-            out[i + 1] = clamp(factor * (out[i + 1] - 128) + 128);
-            out[i + 2] = clamp(factor * (out[i + 2] - 128) + 128);
-          }
-        }
-
-        // 7. Vignette
-        if (eff.vignette > 0.01) {
-          const v = eff.vignette;
-          const cx = w / 2;
-          const cy = h / 2;
-          const maxDist = Math.hypot(cx, cy);
-          for (let y = 0; y < h; y++) {
-            const dy = y - cy;
-            for (let x = 0; x < w; x++) {
-              const dx = x - cx;
-              const dist = Math.hypot(dx, dy) / maxDist;
-              const vignetteFactor = 1 - Math.pow(dist, 1.8) * v * 0.85;
-              const idx = (y * w + x) * 4;
-              out[idx] = clamp(out[idx] * vignetteFactor);
-              out[idx + 1] = clamp(out[idx + 1] * vignetteFactor);
-              out[idx + 2] = clamp(out[idx + 2] * vignetteFactor);
+          // 8. Invert
+          if (eff.invert > 0.01) {
+            const invA = eff.invert;
+            const keepA = 1 - invA;
+            for (let i = 0; i < out.length; i += 4) {
+              out[i] = out[i] * keepA + (255 - out[i]) * invA;
+              out[i + 1] = out[i + 1] * keepA + (255 - out[i + 1]) * invA;
+              out[i + 2] = out[i + 2] * keepA + (255 - out[i + 2]) * invA;
             }
           }
-        }
 
-        // 8. Invert
-        if (eff.invert > 0.01) {
-          const invAmount = eff.invert;
-          const keepAmount = 1 - invAmount;
-          for (let i = 0; i < out.length; i += 4) {
-            out[i] = out[i] * keepAmount + (255 - out[i]) * invAmount;
-            out[i + 1] = out[i + 1] * keepAmount + (255 - out[i + 1]) * invAmount;
-            out[i + 2] = out[i + 2] * keepAmount + (255 - out[i + 2]) * invAmount;
+          // Apply Master Intensity Blend
+          if (master < 0.999) {
+            for (let i = 0; i < out.length; i += 4) {
+              out[i] = src[i] + (out[i] - src[i]) * master;
+              out[i + 1] = src[i + 1] + (out[i + 1] - src[i + 1]) * master;
+              out[i + 2] = src[i + 2] + (out[i + 2] - src[i + 2]) * master;
+            }
           }
-        }
 
-        // Apply Master Intensity Blend with Original
-        if (master < 0.999) {
-          for (let i = 0; i < out.length; i += 4) {
-            out[i] = srcData[i] + (out[i] - srcData[i]) * master;
-            out[i + 1] = srcData[i + 1] + (out[i + 1] - srcData[i + 1]) * master;
-            out[i + 2] = srcData[i + 2] + (out[i + 2] - srcData[i + 2]) * master;
-          }
-        }
-
-        canvasCtx.putImageData(outputImage, 0, 0);
+          canvasCtx.putImageData(outputImg, 0, 0);
+          isRendering = false;
+        });
       }
 
-      // Load Image
+      // Load Image with Center-Crop Fill (Crisp 100% Fill)
       function loadImage(src) {
         const img = new Image();
         img.onload = () => {
           sourceImage = img;
-          const maxW = 580;
-          const maxH = 408;
-          let renderW = img.naturalWidth;
-          let renderH = img.naturalHeight;
-          const scale = Math.min(1, maxW / renderW, maxH / renderH);
-          renderW = Math.round(renderW * scale);
-          renderH = Math.round(renderH * scale);
+          const imgW = img.naturalWidth;
+          const imgH = img.naturalHeight;
 
-          pixelCanvas.width = renderW;
-          pixelCanvas.height = renderH;
-          canvasCtx.drawImage(img, 0, 0, renderW, renderH);
-          originalImageData = canvasCtx.getImageData(0, 0, renderW, renderH);
+          // Center-crop fill to perfectly cover display dimensions without stretching or letterboxing
+          const scale = Math.max(canvasW / imgW, canvasH / imgH);
+          const drawW = imgW * scale;
+          const drawH = imgH * scale;
+          const offsetX = (canvasW - drawW) / 2;
+          const offsetY = (canvasH - drawH) / 2;
 
-          pixelCanvas.hidden = false;
+          canvasCtx.clearRect(0, 0, canvasW, canvasH);
+          canvasCtx.imageSmoothingEnabled = true;
+          canvasCtx.imageSmoothingQuality = "high";
+          canvasCtx.drawImage(img, offsetX, offsetY, drawW, drawH);
+
+          rawImageData = canvasCtx.getImageData(0, 0, canvasW, canvasH);
           applyPixelStack();
         };
         img.src = src;
       }
 
-      // Vertical Slider Interaction
+      // ROTARY KNOB 1: UPLOAD
+      let uploadAngle = 0;
+      function setupUploadKnob() {
+        let isDragging = false;
+        let startY = 0;
+        let startAngle = 0;
+        let hasMoved = false;
+
+        uploadKnob.addEventListener("pointerdown", (event) => {
+          isDragging = true;
+          hasMoved = false;
+          startY = event.clientY;
+          startAngle = uploadAngle;
+          uploadKnob.classList.add("is-dragging");
+          uploadKnob.setPointerCapture(event.pointerId);
+        });
+
+        uploadKnob.addEventListener("pointermove", (event) => {
+          if (!isDragging) return;
+          const dy = startY - event.clientY;
+          if (Math.abs(dy) > 4) hasMoved = true;
+          uploadAngle = startAngle + dy * 1.5;
+          uploadRing.style.transform = `rotate(${uploadAngle}deg)`;
+        });
+
+        const endDrag = (event) => {
+          if (!isDragging) return;
+          isDragging = false;
+          uploadKnob.classList.remove("is-dragging");
+          try {
+            uploadKnob.releasePointerCapture(event.pointerId);
+          } catch (_) {}
+
+          if (!hasMoved) {
+            imageInput.click();
+          } else {
+            presetIndex = (presetIndex + 1) % presetList.length;
+            loadImage(presetList[presetIndex]);
+          }
+        };
+
+        uploadKnob.addEventListener("pointerup", endDrag);
+        uploadKnob.addEventListener("pointercancel", endDrag);
+
+        uploadKnob.addEventListener("wheel", (event) => {
+          event.preventDefault();
+          uploadAngle += event.deltaY > 0 ? 30 : -30;
+          uploadRing.style.transform = `rotate(${uploadAngle}deg)`;
+          presetIndex = (presetIndex + 1) % presetList.length;
+          loadImage(presetList[presetIndex]);
+        }, { passive: false });
+      }
+
+      // ROTARY KNOB 2: INTENSITY
+      function setIntensity(pct) {
+        masterIntensity = Math.max(0, Math.min(100, Math.round(pct))) / 100;
+        intensityKnob.setAttribute("aria-valuenow", String(Math.round(masterIntensity * 100)));
+        intensityValue.textContent = `${Math.round(masterIntensity * 100)}%`;
+
+        // Map 0..1 to -135deg .. +135deg
+        const deg = -135 + masterIntensity * 270;
+        intensityRing.style.transform = `rotate(${deg}deg)`;
+        applyPixelStack();
+      }
+
+      function setupIntensityKnob() {
+        let isDragging = false;
+        let startY = 0;
+        let startIntensity = 100;
+
+        intensityKnob.addEventListener("pointerdown", (event) => {
+          isDragging = true;
+          startY = event.clientY;
+          startIntensity = masterIntensity * 100;
+          intensityKnob.classList.add("is-dragging");
+          intensityKnob.setPointerCapture(event.pointerId);
+        });
+
+        intensityKnob.addEventListener("pointermove", (event) => {
+          if (!isDragging) return;
+          const dy = startY - event.clientY;
+          setIntensity(startIntensity + dy * 0.75);
+        });
+
+        const endDrag = (event) => {
+          if (!isDragging) return;
+          isDragging = false;
+          intensityKnob.classList.remove("is-dragging");
+          try {
+            intensityKnob.releasePointerCapture(event.pointerId);
+          } catch (_) {}
+        };
+
+        intensityKnob.addEventListener("pointerup", endDrag);
+        intensityKnob.addEventListener("pointercancel", endDrag);
+
+        intensityKnob.addEventListener("wheel", (event) => {
+          event.preventDefault();
+          setIntensity(masterIntensity * 100 + (event.deltaY < 0 ? 5 : -5));
+        }, { passive: false });
+
+        intensityKnob.addEventListener("keydown", (event) => {
+          let delta = 0;
+          if (event.key === "ArrowUp" || event.key === "ArrowRight") delta = event.shiftKey ? 10 : 2;
+          else if (event.key === "ArrowDown" || event.key === "ArrowLeft") delta = event.shiftKey ? -10 : -2;
+          if (delta !== 0) {
+            event.preventDefault();
+            setIntensity(masterIntensity * 100 + delta);
+          }
+        });
+      }
+
+      // ROTARY KNOB 3: RESET
+      function setupResetKnob() {
+        let isDragging = false;
+        let startY = 0;
+        let currentAngle = 0;
+
+        function triggerReset() {
+          // Reset Master Intensity to 100%
+          setIntensity(100);
+
+          // Reset all 8 vertical sliders with spring transition
+          sliderCols.forEach((col) => {
+            const dot = col.querySelector(".slider-dot");
+            const fill = col.querySelector(".v-slider-fill");
+            const tooltip = col.querySelector(".slider-tooltip");
+            const effectName = col.dataset.effect;
+            const displayName = col.dataset.name;
+
+            effectValues[effectName] = 0;
+            col.setAttribute("aria-valuenow", "0");
+            col.classList.remove("has-value");
+
+            dot.style.transition = "bottom 280ms var(--md-sys-motion-spring-fast-spatial)";
+            dot.style.bottom = "0px";
+            fill.style.height = "0%";
+            tooltip.textContent = `${displayName}: 0%`;
+
+            setTimeout(() => {
+              dot.style.transition = "";
+            }, 300);
+          });
+
+          // Reset ring spin animation
+          resetRing.style.transition = "transform 360ms var(--md-sys-motion-spring-fast-spatial)";
+          resetRing.style.transform = "rotate(360deg)";
+          setTimeout(() => {
+            resetRing.style.transition = "none";
+            resetRing.style.transform = "rotate(0deg)";
+          }, 380);
+
+          applyPixelStack();
+        }
+
+        resetKnob.addEventListener("pointerdown", (event) => {
+          isDragging = true;
+          startY = event.clientY;
+          resetKnob.classList.add("is-dragging");
+          resetKnob.setPointerCapture(event.pointerId);
+        });
+
+        resetKnob.addEventListener("pointermove", (event) => {
+          if (!isDragging) return;
+          const dy = startY - event.clientY;
+          currentAngle = dy * 1.5;
+          resetRing.style.transform = `rotate(${currentAngle}deg)`;
+        });
+
+        const endDrag = (event) => {
+          if (!isDragging) return;
+          isDragging = false;
+          resetKnob.classList.remove("is-dragging");
+          try {
+            resetKnob.releasePointerCapture(event.pointerId);
+          } catch (_) {}
+          triggerReset();
+        };
+
+        resetKnob.addEventListener("pointerup", endDrag);
+        resetKnob.addEventListener("pointercancel", endDrag);
+
+        resetKnob.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            triggerReset();
+          }
+        });
+      }
+
+      // 8 VERTICAL INTERACTIVE SLIDERS
       sliderCols.forEach((col) => {
         const dot = col.querySelector(".slider-dot");
         const fill = col.querySelector(".v-slider-fill");
@@ -812,7 +1268,10 @@
         col.addEventListener("pointerup", endDrag);
         col.addEventListener("pointercancel", endDrag);
 
-        // Keyboard navigation
+        col.addEventListener("dblclick", () => {
+          setSliderVal(0);
+        });
+
         col.addEventListener("keydown", (event) => {
           let delta = 0;
           if (event.key === "ArrowUp" || event.key === "ArrowRight") delta = event.shiftKey ? 10 : 2;
@@ -837,49 +1296,7 @@
         });
       });
 
-      // Master Intensity Toggle/Cycle
-      intensityButton.addEventListener("click", () => {
-        if (masterIntensity >= 0.99) masterIntensity = 0.75;
-        else if (masterIntensity >= 0.74) masterIntensity = 0.5;
-        else if (masterIntensity >= 0.49) masterIntensity = 0.25;
-        else if (masterIntensity >= 0.24) masterIntensity = 0.0;
-        else masterIntensity = 1.0;
-
-        intensitySub.textContent = `${Math.round(masterIntensity * 100)}%`;
-        applyPixelStack();
-      });
-
-      // Reset Button: Spring animate all dots back to bottom
-      resetButton.addEventListener("click", () => {
-        masterIntensity = 1.0;
-        intensitySub.textContent = "100%";
-
-        sliderCols.forEach((col) => {
-          const dot = col.querySelector(".slider-dot");
-          const fill = col.querySelector(".v-slider-fill");
-          const tooltip = col.querySelector(".slider-tooltip");
-          const effectName = col.dataset.effect;
-          const displayName = col.dataset.name;
-
-          effectValues[effectName] = 0;
-          col.setAttribute("aria-valuenow", "0");
-          col.classList.remove("has-value");
-          dot.style.transition = "bottom 280ms var(--md-sys-motion-spring-fast-spatial)";
-          dot.style.bottom = "0px";
-          fill.style.height = "0%";
-          tooltip.textContent = `${displayName}: 0%`;
-
-          setTimeout(() => {
-            dot.style.transition = "";
-          }, 300);
-        });
-
-        applyPixelStack();
-      });
-
-      // Upload Button & White Box click
-      uploadButton.addEventListener("click", () => imageInput.click());
-
+      // File Input Change
       imageInput.addEventListener("change", (event) => {
         const file = event.target.files[0];
         if (file && file.type.startsWith("image/")) {
@@ -890,7 +1307,7 @@
         event.target.value = "";
       });
 
-      // Drag and drop onto screen box
+      // Drag and Drop Image onto Screen Box
       screenBox.addEventListener("dragover", (event) => {
         event.preventDefault();
         screenBox.classList.add("drag-over");
@@ -911,19 +1328,21 @@
         }
       });
 
-      // Click on canvas to download or upload if empty
+      // Click Screen Box to Download Processed PNG
       screenBox.addEventListener("click", () => {
-        if (!pixelCanvas.hidden && pixelCanvas.width > 0) {
+        if (pixelCanvas.width > 0) {
           const link = document.createElement("a");
-          link.download = "pixel-edited.png";
+          link.download = "pixel-studio-export.png";
           link.href = pixelCanvas.toDataURL("image/png");
           link.click();
-        } else {
-          imageInput.click();
         }
       });
 
-      // Load sample image on start
+      // Initialize
+      setupUploadKnob();
+      setupIntensityKnob();
+      setupResetKnob();
+      setIntensity(100);
       loadImage(sampleImagePath);
     </script>
   </body>

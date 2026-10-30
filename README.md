@@ -1,21 +1,33 @@
 # Movements — Pixel Studio
 
-An interactive browser-only image studio that allows pixel-level image adjustments and stacking, built to match the custom hardware-inspired interface.
+An interactive browser-only image studio built with Material 3 design, rotary knob controls, and vertical stackable effect sliders.
 
-## Interface & Controls
+## Controls & Architecture
 
-- **UPLOAD (Top-Left Circle)**: Open the file picker to upload any image file. You can also drag and drop images directly onto the white box.
-- **INTENSITY (Middle-Left Circle)**: Adjusts the master intensity mix across all stacked effects (cycles 100% → 75% → 50% → 25% → 0%).
-- **RESET (Bottom-Left Circle)**: Smoothly animates all active effect slider dots back to 0% with spring physics.
-- **The White Display Box**: Renders the image on an HTML5 `<canvas>` with real-time TypedArray pixel manipulation. Clicking on the white box downloads the processed PNG.
-- **Vertical Stackable Sliders (The 8 Dots)**:
-  - Dragging any dot upward increases the strength of that effect (from 0% at rest up to 100%).
-  - The effects stack sequentially on the pixel buffer in real time:
-    1. **Pixelate**: Block-level pixel aggregation.
-    2. **Film Grain**: Organic procedural grain/noise.
-    3. **Sharpen**: 3x3 convolution edge enhancement.
-    4. **Posterize**: Quantized color channel stepping.
-    5. **Sepia**: Warm tone matrix transformation.
-    6. **Contrast**: Luminance threshold expansion.
+- **UPLOAD (Top Knob)**:
+  - Click to browse and upload any image file.
+  - Drag vertically or scroll to cycle through built-in sample presets.
+  - Drag and drop image files directly onto the screen box.
+- **INTENSITY (Middle Knob)**:
+  - An interactive 270-degree rotary potentiometer knob (-135° to +135°).
+  - Drag vertically or scroll to modulate the master blending intensity (`0%` to `100%`) across all stacked pixel effects.
+- **RESET (Bottom Knob)**:
+  - Click or turn to reset all 8 effect sliders back to `0%` and master intensity back to `100%` with a smooth 360° spring return animation.
+- **White Screen Box (100% Fill & High-DPI Display)**:
+  - Automatically center-crops and fills the display area without borders or distortion.
+  - Rendered at 2× Retina resolution with hardware-accelerated typed array pixel manipulation.
+  - Hover reveals a save badge; clicking downloads the processed image as a PNG.
+- **8 Vertical Stackable Sliders**:
+  - Drag any dot upward to increase its effect intensity (from `0%` at the bottom to `100%`).
+  - Double-clicking any dot resets that individual slider to `0%`.
+  - Arrow keys and PageUp/PageDown provide full keyboard accessibility.
+  - Live tooltip badges display the exact percentage during interaction.
+  - Effects stack sequentially on the pixel buffer in real time:
+    1. **Pixel**: Block aggregation.
+    2. **Grain**: Organic procedural film grain.
+    3. **Sharp**: 3×3 convolution kernel sharpening.
+    4. **Poster**: RGB channel quantization.
+    5. **Sepia**: Warm tone color grading.
+    6. **Contrast**: Midpoint luminance thresholding.
     7. **Vignette**: Radial luminance falloff.
-    8. **Invert**: Pixel color inversion.
+    8. **Invert**: RGB inversion.
