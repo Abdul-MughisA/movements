@@ -7,137 +7,181 @@
       name="description"
       content="Bring an image to life with a simple, adjustable movement preview."
     />
-    <title>Movements — Image studio</title>
+    <title>Movements</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         color-scheme: light;
-        font-family: "Google Sans", "Segoe UI", system-ui, sans-serif;
+        font-family: "Roboto", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         color: #1d1b20;
-        background: #fff;
+        background: #ffffff;
         font-synthesis: none;
         text-rendering: optimizeLegibility;
-        --primary: #6550a4;
-        --on-primary: #fff;
-        --primary-container: #e9ddff;
-        --on-primary-container: #25124f;
-        --surface: #fff;
-        --surface-low: #f7f2fa;
-        --surface-container: #f0eaf4;
-        --on-surface-variant: #49454f;
-        --outline: #79747e;
-        --outline-variant: #cac4d0;
-        --error: #b3261e;
-        --shape-small: 12px;
-        --shape-large: 28px;
+        -webkit-font-smoothing: antialiased;
+
+        /* Material 3 Baseline Color Tokens */
+        --md-sys-color-primary: #6750a4;
+        --md-sys-color-on-primary: #ffffff;
+        --md-sys-color-primary-container: #eaddff;
+        --md-sys-color-on-primary-container: #21005d;
+        --md-sys-color-secondary-container: #e8def8;
+        --md-sys-color-on-secondary-container: #1d192b;
+        --md-sys-color-surface: #fef7ff;
+        --md-sys-color-on-surface: #1d1b20;
+        --md-sys-color-surface-variant: #e7e0ec;
+        --md-sys-color-on-surface-variant: #49454f;
+        --md-sys-color-surface-container-high: #ece6f0;
+        --md-sys-color-tonal-button: #ded7e8;
+        --md-sys-color-stop-indicator: #4a4459;
+
+        /* Material 3 Shape Tokens */
+        --md-sys-shape-corner-small: 8px;
+        --md-sys-shape-corner-large: 16px;
+        --md-sys-shape-corner-extra-large: 28px;
+        --md-sys-shape-corner-full: 9999px;
+
+        /* Material 3 Motion Tokens */
+        --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+        --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+        --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+        --md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+        --md-sys-motion-spring-fast-spatial: linear(
+          0, 0.15199 10%, 0.41201 20%, 0.6383 30%, 0.79724 40%,
+          0.89588 50%, 0.9516 60%, 0.98044 70%, 0.99397 80%, 0.99953 90%, 1.0013 100%
+        );
+
+        /* Elevation */
+        --md-sys-elevation-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px rgba(0, 0, 0, 0.3);
       }
 
       * {
         box-sizing: border-box;
+        margin: 0;
+        padding: 0;
       }
 
       body {
-        min-width: 320px;
         min-height: 100vh;
-        margin: 0;
+        width: 100%;
+        overflow-x: hidden;
+        background: #ffffff;
       }
 
-      button,
-      input {
-        font: inherit;
-      }
-
-      button {
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      button:focus-visible,
-      input:focus-visible {
-        outline: 3px solid #8c75ce;
-        outline-offset: 3px;
-      }
-
-      .app {
+      /* App Layout */
+      .app-layout {
         display: grid;
+        grid-template-columns: 352px 1fr;
         min-height: 100vh;
-        grid-template-columns: 280px minmax(0, 1fr);
+        width: 100%;
       }
 
+      /* Sidebar */
       .sidebar {
+        width: 352px;
+        background: var(--md-sys-color-surface);
+        padding: 52px 38px;
         display: flex;
         flex-direction: column;
-        gap: 34px;
-        padding: 28px 22px;
-        background: var(--surface-low);
+        user-select: none;
       }
 
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .brand-mark {
-        display: grid;
-        width: 40px;
-        height: 40px;
-        place-items: center;
-        border-radius: 14px;
-        color: var(--on-primary);
-        background: var(--primary);
-      }
-
-      .brand-mark svg {
-        width: 22px;
-        height: 22px;
-      }
-
-      .brand-name {
-        margin: 0;
-        font-size: 18px;
-        font-weight: 650;
-        letter-spacing: -0.02em;
-      }
-
-      .brand-caption {
-        margin: 3px 0 0;
-        color: var(--on-surface-variant);
-        font-size: 12px;
-      }
-
-      .sidebar-controls {
-        display: grid;
-        gap: 28px;
-      }
-
-      .upload-button,
-      .play-button {
+      /* Base Button with M3 State Layer & Shape Morph */
+      button {
+        font-family: inherit;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
         display: inline-flex;
-        min-height: 48px;
         align-items: center;
         justify-content: center;
-        gap: 10px;
-        border: 0;
-        border-radius: 16px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 600;
-        transition: background-color 160ms ease, box-shadow 160ms ease;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        transition:
+          border-radius 180ms var(--md-sys-motion-spring-fast-spatial, cubic-bezier(0.2, 0, 0, 1)),
+          background-color 150ms var(--md-sys-motion-easing-standard),
+          box-shadow 150ms var(--md-sys-motion-easing-standard);
       }
 
+      /* State Layer */
+      button::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background-color: currentColor;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 120ms linear;
+      }
+
+      button:hover::before {
+        opacity: 0.08;
+      }
+
+      button:focus-visible::before {
+        opacity: 0.10;
+      }
+
+      button:focus-visible {
+        outline: 2px solid var(--md-sys-color-primary);
+        outline-offset: 2px;
+      }
+
+      /* M3 Shape Morph on Press */
+      button:active {
+        border-radius: var(--button-pressed-radius, 8px) !important;
+      }
+
+      button:active::before {
+        opacity: 0.12;
+      }
+
+      button > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Ripple ink animation */
+      .ripple-ink {
+        position: absolute;
+        border-radius: 50%;
+        background-color: currentColor;
+        opacity: 0.16;
+        pointer-events: none;
+        transform: scale(0);
+        animation: m3-ripple 450ms var(--md-sys-motion-easing-standard) forwards;
+      }
+
+      @keyframes m3-ripple {
+        to {
+          transform: scale(2.8);
+          opacity: 0;
+        }
+      }
+
+      /* Upload Button */
       .upload-button {
-        width: 100%;
-        color: var(--on-primary);
-        background: var(--primary);
+        width: 276px;
+        height: 56px;
+        border-radius: var(--md-sys-shape-corner-large);
+        background: var(--md-sys-color-primary);
+        color: var(--md-sys-color-on-primary);
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.1px;
+        gap: 10px;
+        --button-pressed-radius: 8px;
       }
 
-      .upload-button:hover,
-      .play-button:hover {
-        background: #55418f;
-        box-shadow: 0 2px 6px #25124f26;
-      }
-
-      .upload-button svg,
-      .play-button svg {
+      .upload-button svg {
         width: 18px;
         height: 18px;
       }
@@ -146,766 +190,596 @@
         position: absolute;
         width: 1px;
         height: 1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        clip-path: inset(50%);
+        opacity: 0;
+        pointer-events: none;
       }
 
-      .control-label {
+      /* Material 3 Expressive Slider */
+      .slider-container {
+        margin-top: 42px;
+        width: 276px;
+        height: 44px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 12px;
-        color: var(--on-surface-variant);
-        font-size: 13px;
-        font-weight: 600;
+        position: relative;
       }
 
-      .value-pill {
-        min-width: 46px;
-        padding: 5px 9px;
-        border-radius: 999px;
-        color: var(--on-primary-container);
-        background: var(--primary-container);
-        text-align: center;
-        font-variant-numeric: tabular-nums;
-      }
-
-      .range-wrap {
-        padding: 6px 0;
-      }
-
-      input[type="range"] {
+      .m3-slider {
         width: 100%;
-        height: 24px;
-        margin: 0;
-        accent-color: var(--primary);
-        cursor: pointer;
-      }
-
-      .range-ends {
+        height: 44px;
         display: flex;
-        justify-content: space-between;
-        margin-top: 3px;
-        color: var(--on-surface-variant);
-        font-size: 11px;
+        align-items: center;
+        position: relative;
+        cursor: pointer;
+        touch-action: none;
+        outline: none;
       }
 
-      .asset-card {
-        display: grid;
-        gap: 12px;
-        margin-top: auto;
-        padding: 12px;
-        border: 1px solid var(--outline-variant);
-        border-radius: 20px;
-        background: var(--surface);
+      .m3-slider:focus-visible {
+        outline: 2px solid var(--md-sys-color-primary);
+        outline-offset: 4px;
+        border-radius: 12px;
       }
 
-      .asset-card img {
-        display: block;
+      .m3-slider-track-wrap {
         width: 100%;
-        aspect-ratio: 1.77;
-        border-radius: var(--shape-small);
-        object-fit: cover;
-        object-position: center;
-      }
-
-      .asset-name {
-        overflow: hidden;
-        margin: 0;
-        color: var(--on-surface-variant);
-        font-size: 12px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .sample-button {
-        min-height: 40px;
-        border: 0;
-        border-radius: 999px;
-        color: var(--on-primary-container);
-        background: var(--primary-container);
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: 600;
-      }
-
-      .sample-button:hover {
-        background: #ded0f3;
-      }
-
-      .local-note {
-        margin: 0;
-        color: var(--on-surface-variant);
-        font-size: 11px;
-        line-height: 1.5;
-      }
-
-      .workspace {
-        display: grid;
-        min-width: 0;
-        min-height: 100vh;
-        grid-template-rows: 76px minmax(0, 1fr);
-      }
-
-      .topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        padding: 0 clamp(20px, 4vw, 56px);
-        border-bottom: 1px solid #f0edf1;
-      }
-
-      .page-title {
-        margin: 0;
-        font-size: 16px;
-        font-weight: 600;
-      }
-
-      .privacy-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        color: var(--on-surface-variant);
-        font-size: 12px;
-      }
-
-      .privacy-badge svg {
-        width: 16px;
         height: 16px;
-        color: var(--primary);
+        display: flex;
+        align-items: center;
+        position: relative;
       }
 
-      .stage {
-        display: grid;
-        min-height: 0;
-        place-items: center;
-        padding: clamp(20px, 5vw, 64px);
+      .m3-slider-active-track {
+        height: 16px;
+        border-radius: 8px;
+        background: var(--md-sys-color-primary);
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+
+      .m3-slider-thumb {
+        position: absolute;
+        top: 50%;
+        width: 4px;
+        height: 42px;
+        transform: translate(-50%, -50%);
+        border-radius: 2px;
+        background: var(--md-sys-color-primary);
+        transition: width 150ms var(--md-sys-motion-easing-standard);
+        z-index: 2;
+      }
+
+      .m3-slider:hover .m3-slider-thumb,
+      .m3-slider.is-dragging .m3-slider-thumb {
+        width: 6px;
+      }
+
+      .m3-slider-inactive-track {
+        height: 16px;
+        border-radius: 8px;
+        background: var(--md-sys-color-secondary-container);
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+
+      .m3-slider-stop-indicator {
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: var(--md-sys-color-stop-indicator);
+        pointer-events: none;
+      }
+
+      /* Value Tooltip Badge */
+      .m3-slider-value-badge {
+        position: absolute;
+        bottom: calc(100% + 10px);
+        left: 50%;
+        transform: translateX(-50%) translateY(4px);
+        background: var(--md-sys-color-on-primary-container);
+        color: var(--md-sys-color-on-primary);
+        font-size: 12px;
+        font-weight: 500;
+        padding: 4px 8px;
+        border-radius: 8px;
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 0;
+        transition:
+          opacity 140ms var(--md-sys-motion-easing-standard),
+          transform 140ms var(--md-sys-motion-easing-standard);
+      }
+
+      .m3-slider:hover .m3-slider-value-badge,
+      .m3-slider.is-dragging .m3-slider-value-badge {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      /* Canvas / Preview Stage */
+      .canvas-area {
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
         overflow: hidden;
-        background:
-          radial-gradient(ellipse at 50% 45%, #faf8fc 0, #fff 68%);
-        transition: background-color 160ms ease;
+        min-height: 100vh;
+        transition: background-color 180ms ease;
       }
 
-      .stage.is-dragging {
-        background: #f1eaff;
-        box-shadow: inset 0 0 0 4px var(--primary);
+      .canvas-area.drag-over {
+        background-color: #faf6fd;
       }
 
-      .preview {
-        width: min(100%, 720px);
-        text-align: center;
+      .canvas-area.drag-over::after {
+        content: "";
+        position: absolute;
+        inset: 16px;
+        border: 2px dashed var(--md-sys-color-primary);
+        border-radius: 24px;
+        pointer-events: none;
       }
 
-      .preview-frame {
-        display: grid;
-        min-height: min(58vh, 500px);
-        place-items: center;
-        padding: 12px;
-        border: 1px solid #e8e2eb;
-        border-radius: var(--shape-large);
-        background: #fff;
-        box-shadow: 0 12px 40px #25124f0d;
-        perspective: 900px;
+      .image-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1000px;
+        max-width: min(85vw, 920px);
+        max-height: min(80vh, 680px);
       }
 
-      .preview-image {
+      .image-container[hidden] {
+        display: none;
+      }
+
+      .moving-image {
         display: block;
-        width: auto;
         max-width: 100%;
-        max-height: min(58vh, 500px);
-        border-radius: 18px;
+        max-height: min(78vh, 640px);
         object-fit: contain;
+        border-radius: 20px;
+        box-shadow: 0 16px 44px rgba(103, 80, 164, 0.12);
+        cursor: pointer;
+        user-select: none;
         transform: translateZ(0);
       }
 
-      .preview-image[hidden] {
-        display: none;
+      .moving-image.is-animating {
+        animation: m3-drift 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
       }
 
-      .empty-state {
-        display: grid;
-        justify-items: center;
-        gap: 12px;
-        max-width: 320px;
-        padding: 28px;
-        color: var(--on-surface-variant);
-        text-align: center;
-      }
-
-      .empty-state[hidden] {
-        display: none;
-      }
-
-      .empty-state svg {
-        width: 42px;
-        height: 42px;
-        color: var(--primary);
-      }
-
-      .empty-state strong {
-        color: #1d1b20;
-        font-size: 16px;
-      }
-
-      .empty-state p {
-        margin: 0;
-        font-size: 13px;
-        line-height: 1.5;
-      }
-
-      .preview-image.is-moving {
-        animation: wander 3.2s ease-in-out infinite alternate;
-      }
-
-      @keyframes wander {
+      @keyframes m3-drift {
         0% {
-          transform: translate3d(var(--distance-negative), -8px, 0)
-            rotate(var(--tilt-negative));
+          transform: translate3d(var(--distance-neg, -22px), -8px, 0) rotate(var(--tilt-neg, -2deg));
         }
         50% {
-          transform: translate3d(0, 0, 0) rotate(0) scale(1.015);
+          transform: translate3d(0, 0, 0) rotate(0deg) scale(1.015);
         }
         100% {
-          transform: translate3d(var(--distance), 6px, 0)
-            rotate(var(--tilt));
+          transform: translate3d(var(--distance, 22px), 8px, 0) rotate(var(--tilt, 2deg));
         }
       }
 
-      .preview-footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        margin-top: 22px;
-        text-align: left;
-      }
-
-      .preview-copy {
-        min-width: 0;
-      }
-
-      .preview-heading {
-        overflow: hidden;
+      /* Material 3 Dialog Centered in Canvas Area */
+      dialog.m3-dialog {
+        position: fixed;
+        top: 50%;
+        left: calc(352px + (100vw - 352px) / 2);
+        transform: translate(-50%, -50%);
         margin: 0;
-        font-size: 15px;
-        font-weight: 600;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .status-message {
-        margin: 5px 0 0;
-        color: var(--on-surface-variant);
-        font-size: 12px;
-      }
-
-      .status-message[data-error="true"] {
-        color: var(--error);
-      }
-
-      .play-button {
-        flex: 0 0 auto;
-        min-height: 42px;
-        padding: 0 18px;
-        color: var(--on-primary);
-        background: var(--primary);
-      }
-
-      dialog {
-        width: min(400px, calc(100vw - 40px));
+        width: 312px;
         padding: 24px;
-        border: 0;
-        border-radius: 28px;
-        color: #1d1b20;
-        background: var(--surface-container);
-        box-shadow: 0 12px 36px #20183222;
+        border: none;
+        border-radius: var(--md-sys-shape-corner-extra-large);
+        background: var(--md-sys-color-surface-container-high);
+        box-shadow: var(--md-sys-elevation-3);
+        color: var(--md-sys-color-on-surface);
+        outline: none;
       }
 
-      dialog::backdrop {
-        background: #fff7;
+      dialog.m3-dialog::backdrop {
+        background: transparent;
+      }
+
+      dialog.m3-dialog[open] {
+        animation: m3-dialog-enter 280ms var(--md-sys-motion-easing-emphasized-decelerate) forwards;
+      }
+
+      dialog.m3-dialog.is-closing {
+        animation: m3-dialog-exit 180ms var(--md-sys-motion-easing-emphasized-accelerate) forwards;
+      }
+
+      @keyframes m3-dialog-enter {
+        from {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      @keyframes m3-dialog-exit {
+        from {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        to {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.92);
+        }
       }
 
       .dialog-title {
-        margin: 0;
         font-size: 24px;
-        font-weight: 500;
-        letter-spacing: -0.02em;
+        line-height: 28px;
+        font-weight: 400;
+        color: var(--md-sys-color-on-surface);
       }
 
       .dialog-copy {
-        margin: 12px 0 24px;
-        color: var(--on-surface-variant);
         font-size: 14px;
-        line-height: 1.5;
+        line-height: 20px;
+        font-weight: 400;
+        color: var(--md-sys-color-on-surface-variant);
+        margin: 16px 0 24px 0;
       }
 
       .dialog-actions {
         display: flex;
+        align-items: center;
         justify-content: flex-end;
         gap: 8px;
       }
 
-      .text-button,
-      .tonal-button {
-        min-height: 40px;
-        padding: 0 16px;
-        border: 0;
-        border-radius: 999px;
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: 600;
-      }
-
+      /* Dialog Buttons */
       .text-button {
-        color: var(--primary);
+        height: 40px;
+        padding: 0 16px;
+        border-radius: var(--md-sys-shape-corner-full);
         background: transparent;
-      }
-
-      .text-button:hover {
-        background: #6550a414;
+        color: var(--md-sys-color-primary);
+        font-size: 14px;
+        font-weight: 500;
+        --button-pressed-radius: 8px;
       }
 
       .tonal-button {
-        color: var(--on-primary-container);
-        background: #e4d8f2;
+        height: 40px;
+        padding: 0 20px;
+        border-radius: var(--md-sys-shape-corner-full);
+        background: var(--md-sys-color-tonal-button);
+        color: var(--md-sys-color-primary);
+        font-size: 14px;
+        font-weight: 500;
+        --button-pressed-radius: 8px;
       }
 
-      .tonal-button:hover {
-        background: #d8c9eb;
-      }
-
+      /* Responsive Layout */
       @media (max-width: 720px) {
-        .app {
+        .app-layout {
           grid-template-columns: 1fr;
-          grid-template-rows: auto minmax(0, 1fr);
+          grid-template-rows: auto 1fr;
         }
 
         .sidebar {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr) minmax(180px, 0.8fr);
-          gap: 18px 24px;
-          padding: 18px 20px;
-        }
-
-        .brand {
-          grid-column: 1 / -1;
-        }
-
-        .sidebar-controls {
-          align-content: start;
-          gap: 16px;
-        }
-
-        .asset-card {
-          align-self: stretch;
-          margin: 0;
-        }
-
-        .asset-card img {
-          max-height: 110px;
-        }
-
-        .workspace {
-          min-height: 56vh;
-          grid-template-rows: 60px minmax(360px, 1fr);
-        }
-
-        .topbar {
-          padding: 0 20px;
-        }
-
-        .stage {
+          width: 100%;
           padding: 24px 20px;
+          align-items: center;
+        }
+
+        .upload-button,
+        .slider-container {
+          width: 100%;
+          max-width: 320px;
+        }
+
+        dialog.m3-dialog {
+          left: 50%;
         }
       }
 
-      @media (max-width: 440px) {
-        .sidebar {
-          grid-template-columns: 1fr;
-        }
-
-        .asset-card {
-          display: none;
-        }
-
-        .privacy-badge {
-          font-size: 0;
-        }
-
-        .privacy-badge svg {
-          width: 19px;
-          height: 19px;
-        }
-
-        .preview-footer {
-          align-items: flex-start;
-        }
-      }
-
+      /* Reduced Motion Accessibility */
       @media (prefers-reduced-motion: reduce) {
-        *,
-        *::before,
-        *::after {
-          scroll-behavior: auto !important;
-          transition-duration: 0.01ms !important;
+        button,
+        dialog.m3-dialog,
+        .m3-slider-thumb,
+        .moving-image {
+          transition: none !important;
+          animation: none !important;
         }
 
-        .preview-image.is-moving {
-          animation: none;
+        .moving-image.is-animating {
+          animation: none !important;
         }
       }
     </style>
   </head>
   <body>
-    <main class="app">
-      <aside class="sidebar" aria-label="Movement controls">
-        <div class="brand">
-          <div class="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path
-                d="M4 13.5c2.7 0 2.7-3 5.3-3s2.7 3 5.4 3 2.7-3 5.3-3M4 18c2.7 0 2.7-3 5.3-3s2.7 3 5.4 3 2.7-3 5.3-3"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-              />
-              <path
-                d="M12 3v3m-2-1 2 2 2-2"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-          <div>
-            <p class="brand-name">Movements</p>
-            <p class="brand-caption">A little motion goes a long way</p>
-          </div>
-        </div>
+    <div class="app-layout">
+      <aside class="sidebar" aria-label="Controls">
+        <button class="upload-button" id="upload-button" type="button" aria-label="Upload">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M11 16V7.85l-2.6 2.6L7 9l5-5 5 5-1.4 1.45-2.6-2.6V16h2ZM5 20q-.825 0-1.412-.587T3 18v-3h2v3h14v-3h2v3q0 .825-.587 1.413T19 20H5Z" />
+          </svg>
+          <span>Upload</span>
+        </button>
+        <input class="file-input" id="image-input" type="file" accept="image/*" aria-label="Choose image file" />
 
-        <div class="sidebar-controls">
-          <div>
-            <button class="upload-button" id="upload-button" type="button">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M12 16V4m0 0L8 8m4-4 4 4M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <span>Upload an image</span>
-            </button>
-            <input
-              class="file-input"
-              id="image-input"
-              type="file"
-              accept="image/*"
-              aria-label="Choose an image"
-            />
-          </div>
-
-          <div>
-            <label class="control-label" for="movement-slider">
-              <span>Movement</span>
-              <output class="value-pill" id="movement-value" for="movement-slider">
-                40%
-              </output>
-            </label>
-            <div class="range-wrap">
-              <input
-                id="movement-slider"
-                type="range"
-                min="0"
-                max="100"
-                value="40"
-                aria-label="Movement intensity"
-              />
-              <div class="range-ends" aria-hidden="true">
-                <span>Still</span>
-                <span>More</span>
+        <div class="slider-container">
+          <div
+            class="m3-slider"
+            id="movement-slider"
+            role="slider"
+            tabindex="0"
+            aria-label="Movement"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="50"
+          >
+            <div class="m3-slider-track-wrap" id="slider-track-wrap">
+              <div class="m3-slider-active-track" id="slider-active-track"></div>
+              <div class="m3-slider-thumb" id="slider-thumb">
+                <div class="m3-slider-value-badge" id="slider-value-badge" aria-hidden="true">50%</div>
+              </div>
+              <div class="m3-slider-inactive-track" id="slider-inactive-track">
+                <div class="m3-slider-stop-indicator"></div>
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="asset-card" aria-label="Included sample image">
-          <img
-            src="Assets/Movements%20Fri%2023%20Oct.png"
-            alt="The included Movements interface sample"
-          />
-          <p class="asset-name">Movements Fri 23 Oct.png</p>
-          <p class="local-note">Try the included interface mockup as your first canvas.</p>
-          <button class="sample-button" id="sample-button" type="button">Use sample</button>
         </div>
       </aside>
 
-      <section class="workspace" aria-label="Image movement studio">
-        <header class="topbar">
-          <h1 class="page-title">Image studio</h1>
-          <span class="privacy-badge">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path
-                d="M12 3 5 6v5c0 4.5 2.9 8.2 7 10 4.1-1.8 7-5.5 7-10V6l-7-3Z"
-                stroke="currentColor"
-                stroke-width="1.7"
-                stroke-linejoin="round"
-              />
-              <path
-                d="m9 12 2 2 4-4"
-                stroke="currentColor"
-                stroke-width="1.7"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            Private preview
-          </span>
-        </header>
+      <main class="canvas-area" id="canvas-area" aria-label="Image preview area">
+        <div class="image-container" id="image-container" hidden>
+          <img class="moving-image" id="preview-image" alt="Loaded image preview" />
+        </div>
+      </main>
+    </div>
 
-        <section class="stage" id="stage" aria-label="Image preview. Drop an image here to open it.">
-          <div class="preview">
-            <div class="preview-frame">
-              <img
-                class="preview-image"
-                id="preview-image"
-                alt="Your selected image preview"
-                hidden
-              />
-              <div class="empty-state" id="empty-state">
-                <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
-                  <rect
-                    x="5"
-                    y="7"
-                    width="38"
-                    height="34"
-                    rx="8"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  />
-                  <circle cx="17" cy="19" r="3" fill="currentColor" />
-                  <path
-                    d="m9 35 10-10 7 7 5-5 8 8"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                <strong>Your canvas is ready</strong>
-                <p>Upload an image, drop it here, or try the included sample.</p>
-              </div>
-            </div>
-            <div class="preview-footer">
-              <div class="preview-copy">
-                <p class="preview-heading" id="preview-heading">Your canvas</p>
-                <p class="status-message" id="status-message" role="status" aria-live="polite">
-                  Ready to move. Drop an image here or upload one.
-                </p>
-              </div>
-              <button
-                class="play-button"
-                id="play-button"
-                type="button"
-                aria-pressed="false"
-                aria-label="Play movement preview"
-              >
-                <svg id="play-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="m9 6 10 6-10 6V6Z" fill="currentColor" />
-                </svg>
-                <span id="play-label">Let's go!</span>
-              </button>
-            </div>
-          </div>
-        </section>
-      </section>
-    </main>
-
-    <dialog id="welcome-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-copy">
+    <dialog class="m3-dialog" id="welcome-dialog" tabindex="-1" aria-labelledby="dialog-title" aria-describedby="dialog-copy">
       <h2 class="dialog-title" id="dialog-title">Hey!</h2>
       <p class="dialog-copy" id="dialog-copy">Do you want to proceed?</p>
       <div class="dialog-actions">
-        <button class="text-button" id="cancel-button" type="button">Cancel</button>
-        <button class="tonal-button" id="continue-button" type="button">Let’s go!</button>
+        <button class="text-button" id="cancel-button" type="button">
+          <span>Cancel</span>
+        </button>
+        <button class="tonal-button" id="continue-button" type="button">
+          <span>Let’s go!</span>
+        </button>
       </div>
     </dialog>
 
     <script>
       const uploadButton = document.querySelector("#upload-button");
       const imageInput = document.querySelector("#image-input");
-      const sampleButton = document.querySelector("#sample-button");
       const movementSlider = document.querySelector("#movement-slider");
-      const movementValue = document.querySelector("#movement-value");
+      const sliderTrackWrap = document.querySelector("#slider-track-wrap");
+      const sliderActiveTrack = document.querySelector("#slider-active-track");
+      const sliderThumb = document.querySelector("#slider-thumb");
+      const sliderInactiveTrack = document.querySelector("#slider-inactive-track");
+      const sliderValueBadge = document.querySelector("#slider-value-badge");
+      const canvasArea = document.querySelector("#canvas-area");
+      const imageContainer = document.querySelector("#image-container");
       const previewImage = document.querySelector("#preview-image");
-      const emptyState = document.querySelector("#empty-state");
-      const previewHeading = document.querySelector("#preview-heading");
-      const stage = document.querySelector("#stage");
-      const statusMessage = document.querySelector("#status-message");
-      const playButton = document.querySelector("#play-button");
-      const playIcon = document.querySelector("#play-icon");
-      const playLabel = document.querySelector("#play-label");
       const welcomeDialog = document.querySelector("#welcome-dialog");
       const cancelButton = document.querySelector("#cancel-button");
       const continueButton = document.querySelector("#continue-button");
-      let localImageUrl = null;
-      let pendingImageUrl = null;
-      let imageLoadSequence = 0;
-      let hasImage = false;
-      let isPlaying = false;
 
-      function setStatus(message, isError = false) {
-        statusMessage.textContent = message;
-        statusMessage.dataset.error = String(isError);
+      const sampleImagePath = "Assets/Movements%20Fri%2023%20Oct.png";
+      let sliderValue = 50;
+      let isDragging = false;
+      let isPlaying = false;
+      let loadedObjectUrl = null;
+
+      // Material 3 Ripple implementation
+      function attachRipple(button) {
+        button.addEventListener("pointerdown", (event) => {
+          const rect = button.getBoundingClientRect();
+          const ripple = document.createElement("span");
+          ripple.className = "ripple-ink";
+          const size = Math.max(rect.width, rect.height) * 1.5;
+          const x = event.clientX - rect.left - size / 2;
+          const y = event.clientY - rect.top - size / 2;
+          ripple.style.width = `${size}px`;
+          ripple.style.height = `${size}px`;
+          ripple.style.left = `${x}px`;
+          ripple.style.top = `${y}px`;
+          button.appendChild(ripple);
+
+          const cleanup = () => {
+            ripple.remove();
+            window.removeEventListener("pointerup", cleanup);
+            window.removeEventListener("pointercancel", cleanup);
+          };
+          window.addEventListener("pointerup", cleanup);
+          window.addEventListener("pointercancel", cleanup);
+        });
       }
 
-      function setMovement(value) {
-        const intensity = Number(value);
+      document.querySelectorAll("button").forEach(attachRipple);
+
+      // Material 3 Expressive Slider
+      function updateSlider(percent) {
+        sliderValue = Math.max(0, Math.min(100, Math.round(percent)));
+        movementSlider.setAttribute("aria-valuenow", String(sliderValue));
+        sliderValueBadge.textContent = `${sliderValue}%`;
+
+        const totalWidth = sliderTrackWrap.getBoundingClientRect().width || 276;
+        const thumbX = (sliderValue / 100) * totalWidth;
+        const gap = 6;
+        const thumbHalf = 2;
+
+        sliderThumb.style.left = `${thumbX}px`;
+
+        const activeWidth = Math.max(0, thumbX - gap - thumbHalf);
+        sliderActiveTrack.style.width = `${activeWidth}px`;
+
+        const inactiveStart = Math.min(totalWidth, thumbX + gap + thumbHalf);
+        const inactiveWidth = Math.max(0, totalWidth - inactiveStart);
+        sliderInactiveTrack.style.width = `${inactiveWidth}px`;
+
+        // Update animation values
+        const intensity = sliderValue;
         const distance = Math.round(intensity * 0.44);
         const tilt = (intensity * 0.04).toFixed(1);
-        movementValue.value = `${intensity}%`;
-        movementValue.textContent = `${intensity}%`;
         previewImage.style.setProperty("--distance", `${distance}px`);
-        previewImage.style.setProperty("--distance-negative", `-${distance}px`);
+        previewImage.style.setProperty("--distance-neg", `-${distance}px`);
         previewImage.style.setProperty("--tilt", `${tilt}deg`);
-        previewImage.style.setProperty("--tilt-negative", `-${tilt}deg`);
+        previewImage.style.setProperty("--tilt-neg", `-${tilt}deg`);
+      }
+
+      function handleSliderPointer(event) {
+        const rect = sliderTrackWrap.getBoundingClientRect();
+        const percent = ((event.clientX - rect.left) / rect.width) * 100;
+        updateSlider(percent);
+      }
+
+      movementSlider.addEventListener("pointerdown", (event) => {
+        isDragging = true;
+        movementSlider.classList.add("is-dragging");
+        movementSlider.setPointerCapture(event.pointerId);
+        handleSliderPointer(event);
+      });
+
+      movementSlider.addEventListener("pointermove", (event) => {
+        if (!isDragging) return;
+        handleSliderPointer(event);
+      });
+
+      const endDragging = (event) => {
+        if (!isDragging) return;
+        isDragging = false;
+        movementSlider.classList.remove("is-dragging");
+        try {
+          movementSlider.releasePointerCapture(event.pointerId);
+        } catch (_) {}
+      };
+
+      movementSlider.addEventListener("pointerup", endDragging);
+      movementSlider.addEventListener("pointercancel", endDragging);
+
+      // Keyboard navigation for slider
+      movementSlider.addEventListener("keydown", (event) => {
+        let delta = 0;
+        if (event.key === "ArrowRight" || event.key === "ArrowUp") delta = event.shiftKey ? 10 : 1;
+        else if (event.key === "ArrowLeft" || event.key === "ArrowDown") delta = event.shiftKey ? -10 : -1;
+        else if (event.key === "PageUp") delta = 10;
+        else if (event.key === "PageDown") delta = -10;
+        else if (event.key === "Home") {
+          updateSlider(0);
+          event.preventDefault();
+          return;
+        } else if (event.key === "End") {
+          updateSlider(100);
+          event.preventDefault();
+          return;
+        }
+
+        if (delta !== 0) {
+          event.preventDefault();
+          updateSlider(sliderValue + delta);
+        }
+      });
+
+      window.addEventListener("resize", () => updateSlider(sliderValue));
+
+      // Image loading & playback
+      function setImageSource(src) {
+        previewImage.onload = () => {
+          imageContainer.hidden = false;
+          setPlaying(true);
+        };
+        previewImage.src = src;
       }
 
       function setPlaying(playing) {
         isPlaying = playing;
-        previewImage.classList.toggle("is-moving", playing);
-        playButton.setAttribute("aria-pressed", String(playing));
-        playButton.setAttribute(
-          "aria-label",
-          playing ? "Pause movement preview" : "Play movement preview",
-        );
-        playLabel.textContent = playing ? "Pause" : "Let's go!";
-        playIcon.innerHTML = playing
-          ? '<path d="M7 6h4v12H7zM14 6h4v12h-4z" fill="currentColor" />'
-          : '<path d="m9 6 10 6-10 6V6Z" fill="currentColor" />';
+        previewImage.classList.toggle("is-animating", playing);
       }
 
-      function startMovement() {
-        if (!hasImage) {
-          setStatus("Upload an image or use the included sample to get started.", true);
-          return;
-        }
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-          setStatus("Motion is turned off by your reduced-motion setting.");
-          return;
-        }
-        setPlaying(true);
-        setStatus("Your image is moving. Adjust the slider to change its movement.");
-      }
+      previewImage.addEventListener("click", () => {
+        setPlaying(!isPlaying);
+      });
 
-      function loadImage(file) {
-        if (!file) return;
-        if (!file.type.startsWith("image/")) {
-          setStatus("Please choose an image file.", true);
-          return;
+      window.addEventListener("keydown", (event) => {
+        if (event.code === "Space" && event.target === document.body && !imageContainer.hidden) {
+          event.preventDefault();
+          setPlaying(!isPlaying);
         }
+      });
 
-        if (pendingImageUrl) URL.revokeObjectURL(pendingImageUrl);
-        const requestId = ++imageLoadSequence;
-        const nextUrl = URL.createObjectURL(file);
-        pendingImageUrl = nextUrl;
-        const candidate = new Image();
-
-        candidate.onload = () => {
-          if (requestId !== imageLoadSequence) {
-            URL.revokeObjectURL(nextUrl);
-            return;
-          }
-          pendingImageUrl = null;
-          if (localImageUrl) URL.revokeObjectURL(localImageUrl);
-          localImageUrl = nextUrl;
-          previewImage.src = nextUrl;
-          previewImage.hidden = false;
-          emptyState.hidden = true;
-          previewHeading.textContent = file.name;
-          hasImage = true;
-          setPlaying(false);
-          setStatus("Image ready. Adjust the movement and press Let’s go!");
+      // Dialog Close with Material 3 Motion
+      function closeDialog(callback) {
+        welcomeDialog.classList.add("is-closing");
+        const onEnd = () => {
+          welcomeDialog.classList.remove("is-closing");
+          welcomeDialog.close();
+          welcomeDialog.removeEventListener("animationend", onEnd);
+          if (callback) callback();
         };
-
-        candidate.onerror = () => {
-          if (requestId !== imageLoadSequence) {
-            URL.revokeObjectURL(nextUrl);
-            return;
-          }
-          pendingImageUrl = null;
-          URL.revokeObjectURL(nextUrl);
-          setStatus("That image could not be opened. Try another file.", true);
-        };
-
-        candidate.src = nextUrl;
+        welcomeDialog.addEventListener("animationend", onEnd);
       }
 
-      function loadSample() {
-        if (pendingImageUrl) URL.revokeObjectURL(pendingImageUrl);
-        pendingImageUrl = null;
-        imageLoadSequence += 1;
-        if (localImageUrl) URL.revokeObjectURL(localImageUrl);
-        localImageUrl = null;
-        previewImage.src = "Assets/Movements%20Fri%2023%20Oct.png";
-        previewImage.hidden = false;
-        emptyState.hidden = true;
-        previewHeading.textContent = "Movements Fri 23 Oct.png";
-        hasImage = true;
-        setPlaying(false);
-        setStatus("Sample ready. Adjust the movement and press Let’s go!");
-      }
+      cancelButton.addEventListener("click", () => closeDialog());
 
-      uploadButton.addEventListener("click", () => imageInput.click());
-      sampleButton.addEventListener("click", loadSample);
-      imageInput.addEventListener("change", (event) => {
-        loadImage(event.currentTarget.files[0]);
-        event.currentTarget.value = "";
-      });
-
-      movementSlider.addEventListener("input", (event) => {
-        setMovement(event.currentTarget.value);
-      });
-
-      playButton.addEventListener("click", () => {
-        if (isPlaying) {
-          setPlaying(false);
-          setStatus("Movement paused.");
-          return;
-        }
-        startMovement();
-      });
-
-      cancelButton.addEventListener("click", () => welcomeDialog.close());
       continueButton.addEventListener("click", () => {
-        welcomeDialog.close();
-        startMovement();
+        closeDialog(() => {
+          setImageSource(sampleImagePath);
+        });
       });
 
-      stage.addEventListener("dragover", (event) => {
+      // Upload button & File input
+      uploadButton.addEventListener("click", () => imageInput.click());
+
+      imageInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file && file.type.startsWith("image/")) {
+          if (loadedObjectUrl) URL.revokeObjectURL(loadedObjectUrl);
+          loadedObjectUrl = URL.createObjectURL(file);
+          if (welcomeDialog.open) closeDialog();
+          setImageSource(loadedObjectUrl);
+        }
+        event.target.value = "";
+      });
+
+      // Drag and drop onto canvas
+      window.addEventListener("dragover", (event) => {
         event.preventDefault();
-        stage.classList.add("is-dragging");
+        canvasArea.classList.add("drag-over");
       });
 
-      stage.addEventListener("dragleave", (event) => {
-        if (!stage.contains(event.relatedTarget)) {
-          stage.classList.remove("is-dragging");
+      window.addEventListener("dragleave", (event) => {
+        if (!event.relatedTarget || event.relatedTarget === document.documentElement) {
+          canvasArea.classList.remove("drag-over");
         }
       });
 
-      stage.addEventListener("drop", (event) => {
+      window.addEventListener("drop", (event) => {
         event.preventDefault();
-        stage.classList.remove("is-dragging");
-        loadImage(event.dataTransfer.files[0]);
+        canvasArea.classList.remove("drag-over");
+        const file = event.dataTransfer?.files?.[0];
+        if (file && file.type.startsWith("image/")) {
+          if (loadedObjectUrl) URL.revokeObjectURL(loadedObjectUrl);
+          loadedObjectUrl = URL.createObjectURL(file);
+          if (welcomeDialog.open) closeDialog();
+          setImageSource(loadedObjectUrl);
+        }
       });
 
-      movementSlider.value = "40";
-      setMovement(movementSlider.value);
+      // Initial state
+      updateSlider(50);
       welcomeDialog.showModal();
+      welcomeDialog.focus({ preventScroll: true });
     </script>
   </body>
 </html>
