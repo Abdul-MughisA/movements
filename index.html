@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Bring an image to life with a simple, adjustable movement preview."
+      content="Pixel-level image editing studio with interactive stackable effect sliders."
     />
-    <title>Movements</title>
+    <title>Movements — Pixel Studio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -24,39 +24,24 @@
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
 
-        /* Material 3 Baseline Color Tokens */
+        /* Material 3 Colors */
         --md-sys-color-primary: #6750a4;
         --md-sys-color-on-primary: #ffffff;
         --md-sys-color-primary-container: #eaddff;
         --md-sys-color-on-primary-container: #21005d;
         --md-sys-color-secondary-container: #e8def8;
-        --md-sys-color-on-secondary-container: #1d192b;
-        --md-sys-color-surface: #fef7ff;
+        --md-sys-color-surface: #ffffff;
         --md-sys-color-on-surface: #1d1b20;
         --md-sys-color-surface-variant: #e7e0ec;
         --md-sys-color-on-surface-variant: #49454f;
-        --md-sys-color-surface-container-high: #ece6f0;
-        --md-sys-color-tonal-button: #ded7e8;
-        --md-sys-color-stop-indicator: #4a4459;
 
-        /* Material 3 Shape Tokens */
-        --md-sys-shape-corner-small: 8px;
-        --md-sys-shape-corner-large: 16px;
-        --md-sys-shape-corner-extra-large: 28px;
-        --md-sys-shape-corner-full: 9999px;
-
-        /* Material 3 Motion Tokens */
+        /* Motion Tokens */
         --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
-        --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
-        --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
         --md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
         --md-sys-motion-spring-fast-spatial: linear(
           0, 0.15199 10%, 0.41201 20%, 0.6383 30%, 0.79724 40%,
           0.89588 50%, 0.9516 60%, 0.98044 70%, 0.99397 80%, 0.99953 90%, 1.0013 100%
         );
-
-        /* Elevation */
-        --md-sys-elevation-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px rgba(0, 0, 0, 0.3);
       }
 
       * {
@@ -67,123 +52,107 @@
 
       body {
         min-height: 100vh;
-        width: 100%;
-        overflow-x: hidden;
-        background: #ffffff;
-      }
-
-      /* App Layout */
-      .app-layout {
-        display: grid;
-        grid-template-columns: 352px 1fr;
-        min-height: 100vh;
-        width: 100%;
-      }
-
-      /* Sidebar */
-      .sidebar {
-        width: 352px;
-        background: var(--md-sys-color-surface);
-        padding: 52px 38px;
+        width: 100vw;
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #ffffff;
+        padding: 16px;
+        overflow-x: hidden;
+      }
+
+      /* Main Studio Frame */
+      .studio-frame {
+        display: flex;
+        gap: 36px;
+        align-items: center;
+        justify-content: center;
+        max-width: 1024px;
+        width: 100%;
         user-select: none;
       }
 
-      /* Base Button with M3 State Layer & Shape Morph */
-      button {
-        font-family: inherit;
+      /* Left Pill Container */
+      .left-pill {
+        width: 190px;
+        height: 606px;
+        border-radius: 95px;
+        background: var(--md-sys-color-primary-container);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 36px 0;
+        flex-shrink: 0;
+      }
+
+      /* Circular Left Buttons */
+      .circle-button {
+        width: 128px;
+        height: 128px;
+        border-radius: 50%;
+        background: var(--md-sys-color-primary);
+        color: var(--md-sys-color-on-primary);
         border: none;
         outline: none;
         cursor: pointer;
         position: relative;
         isolation: isolate;
         overflow: hidden;
-        display: inline-flex;
+        display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        user-select: none;
+        justify-content: flex-start;
+        padding-top: 32px;
+        text-align: center;
+        font-family: inherit;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.9px;
+        text-transform: uppercase;
         -webkit-tap-highlight-color: transparent;
         transition:
-          border-radius 180ms var(--md-sys-motion-spring-fast-spatial, cubic-bezier(0.2, 0, 0, 1)),
-          background-color 150ms var(--md-sys-motion-easing-standard),
-          box-shadow 150ms var(--md-sys-motion-easing-standard);
+          transform 180ms var(--md-sys-motion-spring-fast-spatial),
+          background-color 150ms var(--md-sys-motion-easing-standard);
       }
 
-      /* State Layer */
-      button::before {
+      .circle-button::before {
         content: "";
         position: absolute;
         inset: 0;
-        border-radius: inherit;
+        border-radius: 50%;
         background-color: currentColor;
         opacity: 0;
         pointer-events: none;
         transition: opacity 120ms linear;
       }
 
-      button:hover::before {
+      .circle-button:hover::before {
         opacity: 0.08;
       }
 
-      button:focus-visible::before {
-        opacity: 0.10;
-      }
-
-      button:focus-visible {
-        outline: 2px solid var(--md-sys-color-primary);
-        outline-offset: 2px;
-      }
-
-      /* M3 Shape Morph on Press */
-      button:active {
-        border-radius: var(--button-pressed-radius, 8px) !important;
-      }
-
-      button:active::before {
+      .circle-button:focus-visible::before {
         opacity: 0.12;
       }
 
-      button > * {
-        position: relative;
-        z-index: 1;
+      .circle-button:focus-visible {
+        outline: 3px solid var(--md-sys-color-on-primary-container);
+        outline-offset: 3px;
       }
 
-      /* Ripple ink animation */
-      .ripple-ink {
-        position: absolute;
-        border-radius: 50%;
-        background-color: currentColor;
+      .circle-button:active {
+        transform: scale(0.95);
+      }
+
+      .circle-button:active::before {
         opacity: 0.16;
-        pointer-events: none;
-        transform: scale(0);
-        animation: m3-ripple 450ms var(--md-sys-motion-easing-standard) forwards;
       }
 
-      @keyframes m3-ripple {
-        to {
-          transform: scale(2.8);
-          opacity: 0;
-        }
-      }
-
-      /* Upload Button */
-      .upload-button {
-        width: 276px;
-        height: 56px;
-        border-radius: var(--md-sys-shape-corner-large);
-        background: var(--md-sys-color-primary);
-        color: var(--md-sys-color-on-primary);
-        font-size: 14px;
-        font-weight: 500;
-        letter-spacing: 0.1px;
-        gap: 10px;
-        --button-pressed-radius: 8px;
-      }
-
-      .upload-button svg {
-        width: 18px;
-        height: 18px;
+      .intensity-sub {
+        font-size: 13px;
+        font-weight: 600;
+        margin-top: 18px;
+        opacity: 0.85;
       }
 
       .file-input {
@@ -194,407 +163,387 @@
         pointer-events: none;
       }
 
-      /* Material 3 Expressive Slider */
-      .slider-container {
-        margin-top: 42px;
-        width: 276px;
-        height: 44px;
+      /* Right Main Container */
+      .right-container {
+        width: 700px;
+        height: 606px;
+        border-radius: 48px;
+        background: var(--md-sys-color-primary-container);
         display: flex;
+        flex-direction: column;
         align-items: center;
+        padding: 53px 60px 40px;
         position: relative;
+        flex-shrink: 0;
       }
 
-      .m3-slider {
-        width: 100%;
-        height: 44px;
+      /* White Image Screen Box */
+      .screen-box {
+        width: 580px;
+        height: 408px;
+        border-radius: 32px;
+        background: #ffffff;
+        position: relative;
+        overflow: hidden;
         display: flex;
         align-items: center;
-        position: relative;
+        justify-content: center;
         cursor: pointer;
-        touch-action: none;
-        outline: none;
+        transition: outline 180ms ease, background-color 180ms ease;
       }
 
-      .m3-slider:focus-visible {
-        outline: 2px solid var(--md-sys-color-primary);
-        outline-offset: 4px;
-        border-radius: 12px;
+      .screen-box.drag-over {
+        background-color: #faf5fd;
+        outline: 3px dashed var(--md-sys-color-primary);
+        outline-offset: -8px;
       }
 
-      .m3-slider-track-wrap {
-        width: 100%;
-        height: 16px;
+      .pixel-canvas {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        display: block;
+        border-radius: 20px;
+      }
+
+      /* Interactive Sliders Row Below White Box */
+      .sliders-row {
+        width: 580px;
+        height: 94px;
+        margin-top: 11px;
         display: flex;
-        align-items: center;
+        align-items: flex-end;
+        justify-content: space-between;
         position: relative;
       }
 
-      .m3-slider-active-track {
-        height: 16px;
-        border-radius: 8px;
-        background: var(--md-sys-color-primary);
-        position: absolute;
-        left: 0;
-        top: 0;
+      /* Individual Vertical Slider Column */
+      .v-slider-col {
+        width: 44px;
+        height: 94px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        touch-action: none;
+        cursor: ns-resize;
       }
 
-      .m3-slider-thumb {
+      /* Vertical Track Slot */
+      .v-slider-track {
         position: absolute;
-        top: 50%;
-        width: 4px;
-        height: 42px;
-        transform: translate(-50%, -50%);
-        border-radius: 2px;
-        background: var(--md-sys-color-primary);
-        transition: width 150ms var(--md-sys-motion-easing-standard);
-        z-index: 2;
-      }
-
-      .m3-slider:hover .m3-slider-thumb,
-      .m3-slider.is-dragging .m3-slider-thumb {
+        bottom: 20px;
         width: 6px;
+        height: 54px;
+        border-radius: 3px;
+        background: transparent;
+        pointer-events: none;
+        transition: background-color 150ms ease;
       }
 
-      .m3-slider-inactive-track {
-        height: 16px;
-        border-radius: 8px;
-        background: var(--md-sys-color-secondary-container);
-        position: absolute;
-        right: 0;
-        top: 0;
+      .v-slider-col:hover .v-slider-track,
+      .v-slider-col.is-active .v-slider-track,
+      .v-slider-col.has-value .v-slider-track {
+        background: rgba(103, 80, 164, 0.2);
       }
 
-      .m3-slider-stop-indicator {
+      .v-slider-fill {
         position: absolute;
-        right: 6px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background: var(--md-sys-color-stop-indicator);
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 0%;
+        border-radius: 3px;
+        background: var(--md-sys-color-primary);
         pointer-events: none;
       }
 
-      /* Value Tooltip Badge */
-      .m3-slider-value-badge {
+      /* Slider Dot Handle (40px Circle) */
+      .slider-dot {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--md-sys-color-primary);
+        color: var(--md-sys-color-on-primary);
         position: absolute;
-        bottom: calc(100% + 10px);
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: grab;
+        transition:
+          transform 100ms var(--md-sys-motion-easing-standard),
+          width 120ms ease, height 120ms ease;
+        z-index: 2;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .v-slider-col.is-active .slider-dot {
+        cursor: grabbing;
+        transform: translateX(-50%) scale(1.08);
+      }
+
+      /* Floating Value / Effect Tooltip */
+      .slider-tooltip {
+        position: absolute;
+        bottom: calc(100% + 8px);
         left: 50%;
         transform: translateX(-50%) translateY(4px);
         background: var(--md-sys-color-on-primary-container);
         color: var(--md-sys-color-on-primary);
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 500;
         padding: 4px 8px;
         border-radius: 8px;
         white-space: nowrap;
         pointer-events: none;
         opacity: 0;
+        box-shadow: 0 4px 10px rgba(33, 0, 93, 0.25);
         transition:
           opacity 140ms var(--md-sys-motion-easing-standard),
           transform 140ms var(--md-sys-motion-easing-standard);
+        z-index: 10;
       }
 
-      .m3-slider:hover .m3-slider-value-badge,
-      .m3-slider.is-dragging .m3-slider-value-badge {
+      .v-slider-col:hover .slider-tooltip,
+      .v-slider-col.is-active .slider-tooltip {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
       }
 
-      /* Canvas / Preview Stage */
-      .canvas-area {
-        background: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-        min-height: 100vh;
-        transition: background-color 180ms ease;
-      }
-
-      .canvas-area.drag-over {
-        background-color: #faf6fd;
-      }
-
-      .canvas-area.drag-over::after {
-        content: "";
+      /* Ink Ripple Animation */
+      .ripple-ink {
         position: absolute;
-        inset: 16px;
-        border: 2px dashed var(--md-sys-color-primary);
-        border-radius: 24px;
+        border-radius: 50%;
+        background-color: currentColor;
+        opacity: 0.2;
         pointer-events: none;
+        transform: scale(0);
+        animation: m3-ripple 420ms var(--md-sys-motion-easing-standard) forwards;
       }
 
-      .image-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        perspective: 1000px;
-        max-width: min(85vw, 920px);
-        max-height: min(80vh, 680px);
-      }
-
-      .image-container[hidden] {
-        display: none;
-      }
-
-      .moving-image {
-        display: block;
-        max-width: 100%;
-        max-height: min(78vh, 640px);
-        object-fit: contain;
-        border-radius: 20px;
-        box-shadow: 0 16px 44px rgba(103, 80, 164, 0.12);
-        cursor: pointer;
-        user-select: none;
-        transform: translateZ(0);
-      }
-
-      .moving-image.is-animating {
-        animation: m3-drift 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
-      }
-
-      @keyframes m3-drift {
-        0% {
-          transform: translate3d(var(--distance-neg, -22px), -8px, 0) rotate(var(--tilt-neg, -2deg));
-        }
-        50% {
-          transform: translate3d(0, 0, 0) rotate(0deg) scale(1.015);
-        }
-        100% {
-          transform: translate3d(var(--distance, 22px), 8px, 0) rotate(var(--tilt, 2deg));
-        }
-      }
-
-      /* Material 3 Dialog Centered in Canvas Area */
-      dialog.m3-dialog {
-        position: fixed;
-        top: 50%;
-        left: calc(352px + (100vw - 352px) / 2);
-        transform: translate(-50%, -50%);
-        margin: 0;
-        width: 312px;
-        padding: 24px;
-        border: none;
-        border-radius: var(--md-sys-shape-corner-extra-large);
-        background: var(--md-sys-color-surface-container-high);
-        box-shadow: var(--md-sys-elevation-3);
-        color: var(--md-sys-color-on-surface);
-        outline: none;
-      }
-
-      dialog.m3-dialog::backdrop {
-        background: transparent;
-      }
-
-      dialog.m3-dialog[open] {
-        animation: m3-dialog-enter 280ms var(--md-sys-motion-easing-emphasized-decelerate) forwards;
-      }
-
-      dialog.m3-dialog.is-closing {
-        animation: m3-dialog-exit 180ms var(--md-sys-motion-easing-emphasized-accelerate) forwards;
-      }
-
-      @keyframes m3-dialog-enter {
-        from {
-          opacity: 0;
-          transform: translate(-50%, -50%) scale(0.9);
-        }
+      @keyframes m3-ripple {
         to {
-          opacity: 1;
-          transform: translate(-50%, -50%) scale(1);
-        }
-      }
-
-      @keyframes m3-dialog-exit {
-        from {
-          opacity: 1;
-          transform: translate(-50%, -50%) scale(1);
-        }
-        to {
+          transform: scale(2.6);
           opacity: 0;
-          transform: translate(-50%, -50%) scale(0.92);
         }
-      }
-
-      .dialog-title {
-        font-size: 24px;
-        line-height: 28px;
-        font-weight: 400;
-        color: var(--md-sys-color-on-surface);
-      }
-
-      .dialog-copy {
-        font-size: 14px;
-        line-height: 20px;
-        font-weight: 400;
-        color: var(--md-sys-color-on-surface-variant);
-        margin: 16px 0 24px 0;
-      }
-
-      .dialog-actions {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 8px;
-      }
-
-      /* Dialog Buttons */
-      .text-button {
-        height: 40px;
-        padding: 0 16px;
-        border-radius: var(--md-sys-shape-corner-full);
-        background: transparent;
-        color: var(--md-sys-color-primary);
-        font-size: 14px;
-        font-weight: 500;
-        --button-pressed-radius: 8px;
-      }
-
-      .tonal-button {
-        height: 40px;
-        padding: 0 20px;
-        border-radius: var(--md-sys-shape-corner-full);
-        background: var(--md-sys-color-tonal-button);
-        color: var(--md-sys-color-primary);
-        font-size: 14px;
-        font-weight: 500;
-        --button-pressed-radius: 8px;
       }
 
       /* Responsive Layout */
-      @media (max-width: 720px) {
-        .app-layout {
-          grid-template-columns: 1fr;
-          grid-template-rows: auto 1fr;
-        }
-
-        .sidebar {
-          width: 100%;
-          padding: 24px 20px;
+      @media (max-width: 980px) {
+        .studio-frame {
+          flex-direction: column;
           align-items: center;
         }
 
-        .upload-button,
-        .slider-container {
-          width: 100%;
-          max-width: 320px;
+        .left-pill {
+          width: 580px;
+          height: 180px;
+          border-radius: 90px;
+          flex-direction: row;
+          padding: 0 36px;
         }
 
-        dialog.m3-dialog {
-          left: 50%;
+        .right-container {
+          width: 100%;
+          max-width: 680px;
+          height: auto;
+          padding: 30px 24px;
+        }
+
+        .screen-box {
+          width: 100%;
+          height: 380px;
+        }
+
+        .sliders-row {
+          width: 100%;
         }
       }
 
-      /* Reduced Motion Accessibility */
-      @media (prefers-reduced-motion: reduce) {
-        button,
-        dialog.m3-dialog,
-        .m3-slider-thumb,
-        .moving-image {
-          transition: none !important;
-          animation: none !important;
+      @media (max-width: 600px) {
+        .left-pill {
+          width: 100%;
+          height: auto;
+          border-radius: 36px;
+          padding: 20px;
+          gap: 12px;
         }
 
-        .moving-image.is-animating {
-          animation: none !important;
+        .circle-button {
+          width: 88px;
+          height: 88px;
+          font-size: 9px;
+          padding-top: 22px;
+        }
+
+        .screen-box {
+          height: 280px;
         }
       }
     </style>
   </head>
   <body>
-    <div class="app-layout">
-      <aside class="sidebar" aria-label="Controls">
-        <button class="upload-button" id="upload-button" type="button" aria-label="Upload">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M11 16V7.85l-2.6 2.6L7 9l5-5 5 5-1.4 1.45-2.6-2.6V16h2ZM5 20q-.825 0-1.412-.587T3 18v-3h2v3h14v-3h2v3q0 .825-.587 1.413T19 20H5Z" />
-          </svg>
-          <span>Upload</span>
+    <main class="studio-frame">
+      <!-- Left Pill Container -->
+      <aside class="left-pill" aria-label="Controls">
+        <!-- Button 1: UPLOAD -->
+        <button class="circle-button" id="upload-button" type="button" aria-label="Upload an image">
+          <span>UPLOAD</span>
         </button>
         <input class="file-input" id="image-input" type="file" accept="image/*" aria-label="Choose image file" />
 
-        <div class="slider-container">
-          <div
-            class="m3-slider"
-            id="movement-slider"
-            role="slider"
-            tabindex="0"
-            aria-label="Movement"
-            aria-valuemin="0"
-            aria-valuemax="100"
-            aria-valuenow="50"
-          >
-            <div class="m3-slider-track-wrap" id="slider-track-wrap">
-              <div class="m3-slider-active-track" id="slider-active-track"></div>
-              <div class="m3-slider-thumb" id="slider-thumb">
-                <div class="m3-slider-value-badge" id="slider-value-badge" aria-hidden="true">50%</div>
-              </div>
-              <div class="m3-slider-inactive-track" id="slider-inactive-track">
-                <div class="m3-slider-stop-indicator"></div>
-              </div>
+        <!-- Button 2: INTENSITY -->
+        <button class="circle-button" id="intensity-button" type="button" aria-label="Master Intensity">
+          <span>INTENSITY</span>
+          <span class="intensity-sub" id="intensity-sub">100%</span>
+        </button>
+
+        <!-- Button 3: RESET -->
+        <button class="circle-button" id="reset-button" type="button" aria-label="Reset all effects">
+          <span>RESET</span>
+        </button>
+      </aside>
+
+      <!-- Right Main Container -->
+      <section class="right-container" aria-label="Image screen and effect sliders">
+        <!-- White Display Box -->
+        <div class="screen-box" id="screen-box" title="Click to upload or download processed image, or drop an image file here">
+          <canvas class="pixel-canvas" id="pixel-canvas" role="img" aria-label="Pixel manipulated image" hidden></canvas>
+        </div>
+
+        <!-- 8 Interactive Vertical Sliders (The dots below the white box) -->
+        <div class="sliders-row" id="sliders-row" aria-label="Effect sliders">
+          <!-- Slider 1: Pixelate -->
+          <div class="v-slider-col" data-effect="pixelate" data-name="Pixelate" role="slider" aria-label="Pixelate" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+            <div class="v-slider-track">
+              <div class="v-slider-fill"></div>
+            </div>
+            <div class="slider-dot">
+              <div class="slider-tooltip">Pixelate: 0%</div>
+            </div>
+          </div>
+
+          <!-- Slider 2: Film Grain -->
+          <div class="v-slider-col" data-effect="grain" data-name="Film Grain" role="slider" aria-label="Film Grain" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+            <div class="v-slider-track">
+              <div class="v-slider-fill"></div>
+            </div>
+            <div class="slider-dot">
+              <div class="slider-tooltip">Grain: 0%</div>
+            </div>
+          </div>
+
+          <!-- Slider 3: Sharpen -->
+          <div class="v-slider-col" data-effect="sharpen" data-name="Sharpen" role="slider" aria-label="Sharpen" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+            <div class="v-slider-track">
+              <div class="v-slider-fill"></div>
+            </div>
+            <div class="slider-dot">
+              <div class="slider-tooltip">Sharpen: 0%</div>
+            </div>
+          </div>
+
+          <!-- Slider 4: Posterize -->
+          <div class="v-slider-col" data-effect="posterize" data-name="Posterize" role="slider" aria-label="Posterize" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+            <div class="v-slider-track">
+              <div class="v-slider-fill"></div>
+            </div>
+            <div class="slider-dot">
+              <div class="slider-tooltip">Posterize: 0%</div>
+            </div>
+          </div>
+
+          <!-- Slider 5: Sepia Warmth -->
+          <div class="v-slider-col" data-effect="sepia" data-name="Sepia" role="slider" aria-label="Sepia" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+            <div class="v-slider-track">
+              <div class="v-slider-fill"></div>
+            </div>
+            <div class="slider-dot">
+              <div class="slider-tooltip">Sepia: 0%</div>
+            </div>
+          </div>
+
+          <!-- Slider 6: Contrast / Threshold -->
+          <div class="v-slider-col" data-effect="contrast" data-name="Contrast" role="slider" aria-label="Contrast" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+            <div class="v-slider-track">
+              <div class="v-slider-fill"></div>
+            </div>
+            <div class="slider-dot">
+              <div class="slider-tooltip">Contrast: 0%</div>
+            </div>
+          </div>
+
+          <!-- Slider 7: Vignette -->
+          <div class="v-slider-col" data-effect="vignette" data-name="Vignette" role="slider" aria-label="Vignette" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+            <div class="v-slider-track">
+              <div class="v-slider-fill"></div>
+            </div>
+            <div class="slider-dot">
+              <div class="slider-tooltip">Vignette: 0%</div>
+            </div>
+          </div>
+
+          <!-- Slider 8: Invert -->
+          <div class="v-slider-col" data-effect="invert" data-name="Invert" role="slider" aria-label="Invert" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+            <div class="v-slider-track">
+              <div class="v-slider-fill"></div>
+            </div>
+            <div class="slider-dot">
+              <div class="slider-tooltip">Invert: 0%</div>
             </div>
           </div>
         </div>
-      </aside>
-
-      <main class="canvas-area" id="canvas-area" aria-label="Image preview area">
-        <div class="image-container" id="image-container" hidden>
-          <img class="moving-image" id="preview-image" alt="Loaded image preview" />
-        </div>
-      </main>
-    </div>
-
-    <dialog class="m3-dialog" id="welcome-dialog" tabindex="-1" aria-labelledby="dialog-title" aria-describedby="dialog-copy">
-      <h2 class="dialog-title" id="dialog-title">Hey!</h2>
-      <p class="dialog-copy" id="dialog-copy">Do you want to proceed?</p>
-      <div class="dialog-actions">
-        <button class="text-button" id="cancel-button" type="button">
-          <span>Cancel</span>
-        </button>
-        <button class="tonal-button" id="continue-button" type="button">
-          <span>Let’s go!</span>
-        </button>
-      </div>
-    </dialog>
+      </section>
+    </main>
 
     <script>
+      // Elements
       const uploadButton = document.querySelector("#upload-button");
       const imageInput = document.querySelector("#image-input");
-      const movementSlider = document.querySelector("#movement-slider");
-      const sliderTrackWrap = document.querySelector("#slider-track-wrap");
-      const sliderActiveTrack = document.querySelector("#slider-active-track");
-      const sliderThumb = document.querySelector("#slider-thumb");
-      const sliderInactiveTrack = document.querySelector("#slider-inactive-track");
-      const sliderValueBadge = document.querySelector("#slider-value-badge");
-      const canvasArea = document.querySelector("#canvas-area");
-      const imageContainer = document.querySelector("#image-container");
-      const previewImage = document.querySelector("#preview-image");
-      const welcomeDialog = document.querySelector("#welcome-dialog");
-      const cancelButton = document.querySelector("#cancel-button");
-      const continueButton = document.querySelector("#continue-button");
+      const intensityButton = document.querySelector("#intensity-button");
+      const intensitySub = document.querySelector("#intensity-sub");
+      const resetButton = document.querySelector("#reset-button");
+      const screenBox = document.querySelector("#screen-box");
+      const pixelCanvas = document.querySelector("#pixel-canvas");
+      const sliderCols = document.querySelectorAll(".v-slider-col");
 
+      const canvasCtx = pixelCanvas.getContext("2d", { willReadFrequently: true });
       const sampleImagePath = "Assets/Movements%20Fri%2023%20Oct.png";
-      let sliderValue = 50;
-      let isDragging = false;
-      let isPlaying = false;
-      let loadedObjectUrl = null;
 
-      // Material 3 Ripple implementation
-      function attachRipple(button) {
-        button.addEventListener("pointerdown", (event) => {
-          const rect = button.getBoundingClientRect();
+      // State
+      let sourceImage = null;
+      let originalImageData = null;
+      let masterIntensity = 1.0;
+      let loadedUrl = null;
+      const maxTravel = 52; // Max upward travel in px
+
+      const effectValues = {
+        pixelate: 0,
+        grain: 0,
+        sharpen: 0,
+        posterize: 0,
+        sepia: 0,
+        contrast: 0,
+        vignette: 0,
+        invert: 0,
+      };
+
+      // Material Ripple
+      function attachRipple(el) {
+        el.addEventListener("pointerdown", (event) => {
+          const rect = el.getBoundingClientRect();
           const ripple = document.createElement("span");
           ripple.className = "ripple-ink";
           const size = Math.max(rect.width, rect.height) * 1.5;
-          const x = event.clientX - rect.left - size / 2;
-          const y = event.clientY - rect.top - size / 2;
           ripple.style.width = `${size}px`;
           ripple.style.height = `${size}px`;
-          ripple.style.left = `${x}px`;
-          ripple.style.top = `${y}px`;
-          button.appendChild(ripple);
+          ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
+          ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
+          el.appendChild(ripple);
 
           const cleanup = () => {
             ripple.remove();
@@ -606,180 +555,376 @@
         });
       }
 
-      document.querySelectorAll("button").forEach(attachRipple);
+      document.querySelectorAll(".circle-button").forEach(attachRipple);
 
-      // Material 3 Expressive Slider
-      function updateSlider(percent) {
-        sliderValue = Math.max(0, Math.min(100, Math.round(percent)));
-        movementSlider.setAttribute("aria-valuenow", String(sliderValue));
-        sliderValueBadge.textContent = `${sliderValue}%`;
-
-        const totalWidth = sliderTrackWrap.getBoundingClientRect().width || 276;
-        const thumbX = (sliderValue / 100) * totalWidth;
-        const gap = 6;
-        const thumbHalf = 2;
-
-        sliderThumb.style.left = `${thumbX}px`;
-
-        const activeWidth = Math.max(0, thumbX - gap - thumbHalf);
-        sliderActiveTrack.style.width = `${activeWidth}px`;
-
-        const inactiveStart = Math.min(totalWidth, thumbX + gap + thumbHalf);
-        const inactiveWidth = Math.max(0, totalWidth - inactiveStart);
-        sliderInactiveTrack.style.width = `${inactiveWidth}px`;
-
-        // Update animation values
-        const intensity = sliderValue;
-        const distance = Math.round(intensity * 0.44);
-        const tilt = (intensity * 0.04).toFixed(1);
-        previewImage.style.setProperty("--distance", `${distance}px`);
-        previewImage.style.setProperty("--distance-neg", `-${distance}px`);
-        previewImage.style.setProperty("--tilt", `${tilt}deg`);
-        previewImage.style.setProperty("--tilt-neg", `-${tilt}deg`);
+      // Pixel-level manipulations
+      function clamp(val) {
+        return val < 0 ? 0 : val > 255 ? 255 : val;
       }
 
-      function handleSliderPointer(event) {
-        const rect = sliderTrackWrap.getBoundingClientRect();
-        const percent = ((event.clientX - rect.left) / rect.width) * 100;
-        updateSlider(percent);
+      function applyPixelStack() {
+        if (!sourceImage || !originalImageData) return;
+
+        const w = originalImageData.width;
+        const h = originalImageData.height;
+        const srcData = originalImageData.data;
+        const outputImage = canvasCtx.createImageData(w, h);
+        const out = outputImage.data;
+        out.set(srcData);
+
+        const eff = effectValues;
+        const master = masterIntensity;
+
+        // 1. Pixelate
+        if (eff.pixelate > 0.01) {
+          const blockSize = Math.max(2, Math.round(1 + eff.pixelate * 22));
+          for (let y = 0; y < h; y += blockSize) {
+            for (let x = 0; x < w; x += blockSize) {
+              const blockW = Math.min(blockSize, w - x);
+              const blockH = Math.min(blockSize, h - y);
+              let rSum = 0, gSum = 0, bSum = 0, aSum = 0;
+              const count = blockW * blockH;
+
+              for (let by = 0; by < blockH; by++) {
+                for (let bx = 0; bx < blockW; bx++) {
+                  const idx = ((y + by) * w + (x + bx)) * 4;
+                  rSum += out[idx];
+                  gSum += out[idx + 1];
+                  bSum += out[idx + 2];
+                  aSum += out[idx + 3];
+                }
+              }
+
+              const rAvg = rSum / count;
+              const gAvg = gSum / count;
+              const bAvg = bSum / count;
+              const aAvg = aSum / count;
+
+              for (let by = 0; by < blockH; by++) {
+                for (let bx = 0; bx < blockW; bx++) {
+                  const idx = ((y + by) * w + (x + bx)) * 4;
+                  out[idx] = rAvg;
+                  out[idx + 1] = gAvg;
+                  out[idx + 2] = bAvg;
+                  out[idx + 3] = aAvg;
+                }
+              }
+            }
+          }
+        }
+
+        // 2. Sharpen (Convolution)
+        if (eff.sharpen > 0.01) {
+          const copy = new Uint8ClampedArray(out);
+          const k = eff.sharpen * 1.5;
+          const centerWeight = 1 + 4 * k;
+          for (let y = 1; y < h - 1; y++) {
+            for (let x = 1; x < w - 1; x++) {
+              const idx = (y * w + x) * 4;
+              const top = ((y - 1) * w + x) * 4;
+              const bottom = ((y + 1) * w + x) * 4;
+              const left = (y * w + (x - 1)) * 4;
+              const right = (y * w + (x + 1)) * 4;
+
+              for (let c = 0; c < 3; c++) {
+                const val = centerWeight * copy[idx + c] - k * (copy[top + c] + copy[bottom + c] + copy[left + c] + copy[right + c]);
+                out[idx + c] = clamp(val);
+              }
+            }
+          }
+        }
+
+        // 3. Film Grain
+        if (eff.grain > 0.01) {
+          const amount = eff.grain * 65;
+          let seed = 42;
+          for (let i = 0; i < out.length; i += 4) {
+            seed = (seed * 1664525 + 1013904223) | 0;
+            const noise = ((seed & 0xff) / 127.5 - 1.0) * amount;
+            out[i] = clamp(out[i] + noise);
+            out[i + 1] = clamp(out[i + 1] + noise);
+            out[i + 2] = clamp(out[i + 2] + noise);
+          }
+        }
+
+        // 4. Posterize
+        if (eff.posterize > 0.01) {
+          const levels = Math.max(2, Math.round(16 - eff.posterize * 13));
+          const step = 255 / (levels - 1);
+          for (let i = 0; i < out.length; i += 4) {
+            out[i] = Math.round(out[i] / step) * step;
+            out[i + 1] = Math.round(out[i + 1] / step) * step;
+            out[i + 2] = Math.round(out[i + 2] / step) * step;
+          }
+        }
+
+        // 5. Sepia
+        if (eff.sepia > 0.01) {
+          const s = eff.sepia;
+          const inv = 1 - s;
+          for (let i = 0; i < out.length; i += 4) {
+            const r = out[i], g = out[i + 1], b = out[i + 2];
+            const sr = clamp(0.393 * r + 0.769 * g + 0.189 * b);
+            const sg = clamp(0.349 * r + 0.686 * g + 0.168 * b);
+            const sb = clamp(0.272 * r + 0.534 * g + 0.131 * b);
+            out[i] = r * inv + sr * s;
+            out[i + 1] = g * inv + sg * s;
+            out[i + 2] = b * inv + sb * s;
+          }
+        }
+
+        // 6. Contrast
+        if (eff.contrast > 0.01) {
+          const factor = (259 * (eff.contrast * 180 + 255)) / (255 * (259 - eff.contrast * 180));
+          for (let i = 0; i < out.length; i += 4) {
+            out[i] = clamp(factor * (out[i] - 128) + 128);
+            out[i + 1] = clamp(factor * (out[i + 1] - 128) + 128);
+            out[i + 2] = clamp(factor * (out[i + 2] - 128) + 128);
+          }
+        }
+
+        // 7. Vignette
+        if (eff.vignette > 0.01) {
+          const v = eff.vignette;
+          const cx = w / 2;
+          const cy = h / 2;
+          const maxDist = Math.hypot(cx, cy);
+          for (let y = 0; y < h; y++) {
+            const dy = y - cy;
+            for (let x = 0; x < w; x++) {
+              const dx = x - cx;
+              const dist = Math.hypot(dx, dy) / maxDist;
+              const vignetteFactor = 1 - Math.pow(dist, 1.8) * v * 0.85;
+              const idx = (y * w + x) * 4;
+              out[idx] = clamp(out[idx] * vignetteFactor);
+              out[idx + 1] = clamp(out[idx + 1] * vignetteFactor);
+              out[idx + 2] = clamp(out[idx + 2] * vignetteFactor);
+            }
+          }
+        }
+
+        // 8. Invert
+        if (eff.invert > 0.01) {
+          const invAmount = eff.invert;
+          const keepAmount = 1 - invAmount;
+          for (let i = 0; i < out.length; i += 4) {
+            out[i] = out[i] * keepAmount + (255 - out[i]) * invAmount;
+            out[i + 1] = out[i + 1] * keepAmount + (255 - out[i + 1]) * invAmount;
+            out[i + 2] = out[i + 2] * keepAmount + (255 - out[i + 2]) * invAmount;
+          }
+        }
+
+        // Apply Master Intensity Blend with Original
+        if (master < 0.999) {
+          for (let i = 0; i < out.length; i += 4) {
+            out[i] = srcData[i] + (out[i] - srcData[i]) * master;
+            out[i + 1] = srcData[i + 1] + (out[i + 1] - srcData[i + 1]) * master;
+            out[i + 2] = srcData[i + 2] + (out[i + 2] - srcData[i + 2]) * master;
+          }
+        }
+
+        canvasCtx.putImageData(outputImage, 0, 0);
       }
 
-      movementSlider.addEventListener("pointerdown", (event) => {
-        isDragging = true;
-        movementSlider.classList.add("is-dragging");
-        movementSlider.setPointerCapture(event.pointerId);
-        handleSliderPointer(event);
-      });
+      // Load Image
+      function loadImage(src) {
+        const img = new Image();
+        img.onload = () => {
+          sourceImage = img;
+          const maxW = 580;
+          const maxH = 408;
+          let renderW = img.naturalWidth;
+          let renderH = img.naturalHeight;
+          const scale = Math.min(1, maxW / renderW, maxH / renderH);
+          renderW = Math.round(renderW * scale);
+          renderH = Math.round(renderH * scale);
 
-      movementSlider.addEventListener("pointermove", (event) => {
-        if (!isDragging) return;
-        handleSliderPointer(event);
-      });
+          pixelCanvas.width = renderW;
+          pixelCanvas.height = renderH;
+          canvasCtx.drawImage(img, 0, 0, renderW, renderH);
+          originalImageData = canvasCtx.getImageData(0, 0, renderW, renderH);
 
-      const endDragging = (event) => {
-        if (!isDragging) return;
-        isDragging = false;
-        movementSlider.classList.remove("is-dragging");
-        try {
-          movementSlider.releasePointerCapture(event.pointerId);
-        } catch (_) {}
-      };
-
-      movementSlider.addEventListener("pointerup", endDragging);
-      movementSlider.addEventListener("pointercancel", endDragging);
-
-      // Keyboard navigation for slider
-      movementSlider.addEventListener("keydown", (event) => {
-        let delta = 0;
-        if (event.key === "ArrowRight" || event.key === "ArrowUp") delta = event.shiftKey ? 10 : 1;
-        else if (event.key === "ArrowLeft" || event.key === "ArrowDown") delta = event.shiftKey ? -10 : -1;
-        else if (event.key === "PageUp") delta = 10;
-        else if (event.key === "PageDown") delta = -10;
-        else if (event.key === "Home") {
-          updateSlider(0);
-          event.preventDefault();
-          return;
-        } else if (event.key === "End") {
-          updateSlider(100);
-          event.preventDefault();
-          return;
-        }
-
-        if (delta !== 0) {
-          event.preventDefault();
-          updateSlider(sliderValue + delta);
-        }
-      });
-
-      window.addEventListener("resize", () => updateSlider(sliderValue));
-
-      // Image loading & playback
-      function setImageSource(src) {
-        previewImage.onload = () => {
-          imageContainer.hidden = false;
-          setPlaying(true);
+          pixelCanvas.hidden = false;
+          applyPixelStack();
         };
-        previewImage.src = src;
+        img.src = src;
       }
 
-      function setPlaying(playing) {
-        isPlaying = playing;
-        previewImage.classList.toggle("is-animating", playing);
-      }
+      // Vertical Slider Interaction
+      sliderCols.forEach((col) => {
+        const dot = col.querySelector(".slider-dot");
+        const fill = col.querySelector(".v-slider-fill");
+        const tooltip = col.querySelector(".slider-tooltip");
+        const effectName = col.dataset.effect;
+        const displayName = col.dataset.name;
 
-      previewImage.addEventListener("click", () => {
-        setPlaying(!isPlaying);
-      });
+        function setSliderVal(pct) {
+          const clamped = Math.max(0, Math.min(100, Math.round(pct)));
+          effectValues[effectName] = clamped / 100;
+          col.setAttribute("aria-valuenow", String(clamped));
 
-      window.addEventListener("keydown", (event) => {
-        if (event.code === "Space" && event.target === document.body && !imageContainer.hidden) {
-          event.preventDefault();
-          setPlaying(!isPlaying);
+          if (clamped > 0) {
+            col.classList.add("has-value");
+          } else {
+            col.classList.remove("has-value");
+          }
+
+          // Move dot vertically up
+          const translateY = (clamped / 100) * maxTravel;
+          dot.style.bottom = `${translateY}px`;
+          fill.style.height = `${clamped}%`;
+          tooltip.textContent = `${displayName}: ${clamped}%`;
+
+          applyPixelStack();
         }
-      });
 
-      // Dialog Close with Material 3 Motion
-      function closeDialog(callback) {
-        welcomeDialog.classList.add("is-closing");
-        const onEnd = () => {
-          welcomeDialog.classList.remove("is-closing");
-          welcomeDialog.close();
-          welcomeDialog.removeEventListener("animationend", onEnd);
-          if (callback) callback();
+        let dragging = false;
+
+        function updateFromPointer(clientY) {
+          const rect = col.getBoundingClientRect();
+          const bottomY = rect.bottom - 20; // resting center
+          const deltaY = bottomY - clientY;
+          const pct = (deltaY / maxTravel) * 100;
+          setSliderVal(pct);
+        }
+
+        col.addEventListener("pointerdown", (event) => {
+          dragging = true;
+          col.classList.add("is-active");
+          col.setPointerCapture(event.pointerId);
+          updateFromPointer(event.clientY);
+        });
+
+        col.addEventListener("pointermove", (event) => {
+          if (!dragging) return;
+          updateFromPointer(event.clientY);
+        });
+
+        const endDrag = (event) => {
+          if (!dragging) return;
+          dragging = false;
+          col.classList.remove("is-active");
+          try {
+            col.releasePointerCapture(event.pointerId);
+          } catch (_) {}
         };
-        welcomeDialog.addEventListener("animationend", onEnd);
-      }
 
-      cancelButton.addEventListener("click", () => closeDialog());
+        col.addEventListener("pointerup", endDrag);
+        col.addEventListener("pointercancel", endDrag);
 
-      continueButton.addEventListener("click", () => {
-        closeDialog(() => {
-          setImageSource(sampleImagePath);
+        // Keyboard navigation
+        col.addEventListener("keydown", (event) => {
+          let delta = 0;
+          if (event.key === "ArrowUp" || event.key === "ArrowRight") delta = event.shiftKey ? 10 : 2;
+          else if (event.key === "ArrowDown" || event.key === "ArrowLeft") delta = event.shiftKey ? -10 : -2;
+          else if (event.key === "PageUp") delta = 15;
+          else if (event.key === "PageDown") delta = -15;
+          else if (event.key === "Home") {
+            setSliderVal(0);
+            event.preventDefault();
+            return;
+          } else if (event.key === "End") {
+            setSliderVal(100);
+            event.preventDefault();
+            return;
+          }
+
+          if (delta !== 0) {
+            event.preventDefault();
+            const currentPct = effectValues[effectName] * 100;
+            setSliderVal(currentPct + delta);
+          }
         });
       });
 
-      // Upload button & File input
+      // Master Intensity Toggle/Cycle
+      intensityButton.addEventListener("click", () => {
+        if (masterIntensity >= 0.99) masterIntensity = 0.75;
+        else if (masterIntensity >= 0.74) masterIntensity = 0.5;
+        else if (masterIntensity >= 0.49) masterIntensity = 0.25;
+        else if (masterIntensity >= 0.24) masterIntensity = 0.0;
+        else masterIntensity = 1.0;
+
+        intensitySub.textContent = `${Math.round(masterIntensity * 100)}%`;
+        applyPixelStack();
+      });
+
+      // Reset Button: Spring animate all dots back to bottom
+      resetButton.addEventListener("click", () => {
+        masterIntensity = 1.0;
+        intensitySub.textContent = "100%";
+
+        sliderCols.forEach((col) => {
+          const dot = col.querySelector(".slider-dot");
+          const fill = col.querySelector(".v-slider-fill");
+          const tooltip = col.querySelector(".slider-tooltip");
+          const effectName = col.dataset.effect;
+          const displayName = col.dataset.name;
+
+          effectValues[effectName] = 0;
+          col.setAttribute("aria-valuenow", "0");
+          col.classList.remove("has-value");
+          dot.style.transition = "bottom 280ms var(--md-sys-motion-spring-fast-spatial)";
+          dot.style.bottom = "0px";
+          fill.style.height = "0%";
+          tooltip.textContent = `${displayName}: 0%`;
+
+          setTimeout(() => {
+            dot.style.transition = "";
+          }, 300);
+        });
+
+        applyPixelStack();
+      });
+
+      // Upload Button & White Box click
       uploadButton.addEventListener("click", () => imageInput.click());
 
       imageInput.addEventListener("change", (event) => {
         const file = event.target.files[0];
         if (file && file.type.startsWith("image/")) {
-          if (loadedObjectUrl) URL.revokeObjectURL(loadedObjectUrl);
-          loadedObjectUrl = URL.createObjectURL(file);
-          if (welcomeDialog.open) closeDialog();
-          setImageSource(loadedObjectUrl);
+          if (loadedUrl) URL.revokeObjectURL(loadedUrl);
+          loadedUrl = URL.createObjectURL(file);
+          loadImage(loadedUrl);
         }
         event.target.value = "";
       });
 
-      // Drag and drop onto canvas
-      window.addEventListener("dragover", (event) => {
+      // Drag and drop onto screen box
+      screenBox.addEventListener("dragover", (event) => {
         event.preventDefault();
-        canvasArea.classList.add("drag-over");
+        screenBox.classList.add("drag-over");
       });
 
-      window.addEventListener("dragleave", (event) => {
-        if (!event.relatedTarget || event.relatedTarget === document.documentElement) {
-          canvasArea.classList.remove("drag-over");
-        }
+      screenBox.addEventListener("dragleave", () => {
+        screenBox.classList.remove("drag-over");
       });
 
-      window.addEventListener("drop", (event) => {
+      screenBox.addEventListener("drop", (event) => {
         event.preventDefault();
-        canvasArea.classList.remove("drag-over");
+        screenBox.classList.remove("drag-over");
         const file = event.dataTransfer?.files?.[0];
         if (file && file.type.startsWith("image/")) {
-          if (loadedObjectUrl) URL.revokeObjectURL(loadedObjectUrl);
-          loadedObjectUrl = URL.createObjectURL(file);
-          if (welcomeDialog.open) closeDialog();
-          setImageSource(loadedObjectUrl);
+          if (loadedUrl) URL.revokeObjectURL(loadedUrl);
+          loadedUrl = URL.createObjectURL(file);
+          loadImage(loadedUrl);
         }
       });
 
-      // Initial state
-      updateSlider(50);
-      welcomeDialog.showModal();
-      welcomeDialog.focus({ preventScroll: true });
+      // Click on canvas to download or upload if empty
+      screenBox.addEventListener("click", () => {
+        if (!pixelCanvas.hidden && pixelCanvas.width > 0) {
+          const link = document.createElement("a");
+          link.download = "pixel-edited.png";
+          link.href = pixelCanvas.toDataURL("image/png");
+          link.click();
+        } else {
+          imageInput.click();
+        }
+      });
+
+      // Load sample image on start
+      loadImage(sampleImagePath);
     </script>
   </body>
 </html>
